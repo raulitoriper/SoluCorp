@@ -1,0 +1,27 @@
+{
+  "name": "solucorp",
+  "private": true,
+  "workspaces": [
+    "apps/api",
+    "apps/admin",
+    "apps/client",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "dev:api": "turbo dev --filter=api",
+    "dev:admin": "turbo dev --filter=admin",
+    "dev:client": "turbo dev --filter=client",
+    "dev:mobile": "cd apps/mobile && npx expo start",
+    "build:packages": "turbo build --filter=@solucorp/*"
+  },
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  }
+}
