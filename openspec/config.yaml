@@ -1,0 +1,62 @@
+schema: spec-driven
+
+context: |
+  Monorepo Turborepo: backend NestJS + app móvil React Native (Expo) + 2 portales Next.js
+  Soluciones corporativas de campo multi-tenant con rastreo GPS (reconstrucción de csTigoAndroid.apk)
+  PostgreSQL, Prisma ORM, TypeScript, TailwindCSS, Zustand
+  Mercado paraguayo: Guaraníes (PYG), español, app móvil offline-first
+  9 módulos de servicio: Visitas, Pedidos, Rastreo GPS, Inventario, Asistencia, Guardia, Visita Médica, Courier, Metadata
+
+strict_tdd: false
+
+testing:
+  test_runner: NO ENCONTRADO (proyecto nuevo)
+  capas:
+    unitarias: NO INSTALADAS
+    integración: NO INSTALADAS
+    e2e: NO INSTALADAS
+  cobertura: NO DISPONIBLE
+  calidad:
+    linter: NO INSTALADO
+    type_checker: NO INSTALADO
+    formatter: NO INSTALADO
+  nota: "La infraestructura de testing se agregará en la Fase 1 (fundación del monorepo)"
+
+stack_planificado:
+  backend: NestJS + Prisma + PostgreSQL
+  movil: React Native + Expo + expo-sqlite
+  portal_admin: Next.js + TailwindCSS + Recharts + Leaflet
+  portal_cliente: Next.js + TailwindCSS + Recharts + Leaflet
+  compartido: Turborepo + packages/ui + packages/shared
+  mapas: OpenStreetMap / react-leaflet
+  notificaciones: Expo Push + Nodemailer
+  estado: Zustand
+  offline: expo-sqlite + cola de sincronización
+
+reglas:
+  propuesta:
+    - Incluir plan de rollback para cambios riesgosos
+    - Identificar módulos/paquetes afectados
+    - Considerar impacto en aislamiento multi-tenant
+  especificaciones:
+    - Usar formato Dado/Cuando/Entonces para escenarios
+    - Usar palabras clave RFC 2119 (DEBE, DEBERÍA, PUEDE)
+    - Incluir escenarios offline/sincronización para funcionalidades móviles
+  diseño:
+    - Incluir diagramas de secuencia para flujos complejos
+    - Documentar decisiones de arquitectura con justificación
+    - Considerar aislamiento de tenant en cada modelo de datos
+  tareas:
+    - Agrupar tareas por fase (infraestructura, implementación, testing)
+    - Usar numeración jerárquica (1.1, 1.2, etc.)
+    - Mantener tareas lo suficientemente pequeñas para completar en una sesión
+  aplicar:
+    - Seguir patrones y convenciones existentes del código
+    - Cargar skills de codificación relevantes para el stack
+    - Todos los valores monetarios en Guaraníes (entero, sin decimales)
+  verificar:
+    - Ejecutar tests si existe infraestructura de testing
+    - Comparar implementación contra cada escenario de la spec
+    - Probar aislamiento multi-tenant (datos de empresa A no deben filtrarse a empresa B)
+  archivar:
+    - Advertir antes de fusionar deltas destructivos (eliminaciones grandes)
