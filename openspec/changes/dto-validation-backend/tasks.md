@@ -104,8 +104,8 @@
 
 ## Fase 11: Activar ValidationPipe estricto (commit aparte — DEPENDE de fases 0-10 completas)
 
-- [ ] 11.1 Confirmar que `mobile-audit.md` existe y tiene estado **LIMPIO**; ejecutar `rg "@Body\(\) dto: any" apps/api/src/modules/` — DEBE retornar cero matches antes de continuar.
-- [ ] 11.2 Modificar `apps/api/src/main.ts`: reemplazar la configuración actual del `ValidationPipe` por `new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true, transformOptions: { enableImplicitConversion: false } })`.
+- [x] 11.1 Confirmar que `mobile-audit.md` existe y tiene estado **LIMPIO**; ejecutar `rg "@Body\(\) dto: any" apps/api/src/modules/` — DEBE retornar cero matches antes de continuar.
+- [x] 11.2 Modificar `apps/api/src/main.ts`: reemplazar la configuración actual del `ValidationPipe` por `new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true, transformOptions: { enableImplicitConversion: false } })`.
 - [ ] 11.3 Verificar que campos extra son rechazados: `POST /api/inventory` con body `{"depositCode":"DEP01","productCode":"PROD-001","quantity":5,"appVersion":"1.2.3"}` → 400 con `"property appVersion should not exist"`; `POST /api/inventory` con `"companyId":"empresa-B"` en el body → 400 con `"property companyId should not exist"`.
 - [ ] 11.4 Smoke test de happy path: ejecutar un POST válido en cada uno de los 10 módulos y confirmar que ninguno retorna regresión (todos deben retornar 201 o 200 según el módulo).
 
@@ -113,7 +113,7 @@
 
 ## Fase 12: Verificación final
 
-- [ ] 12.1 Ejecutar `rg "@Body\(\) dto: any" apps/api/src/modules/` → cero matches; ejecutar `rg "\.\.\.(data|dto)" apps/api/src/modules/inventory/inventory.service.ts apps/api/src/modules/attendance/attendance.service.ts apps/api/src/modules/guard/guard.service.ts` → cero matches de spread del payload.
-- [ ] 12.2 Ejecutar `rg "class CreateVisitDto" apps/api/src/modules/visits/visits.controller.ts` → cero matches (el DTO ya no está inline en el controller); inspeccionar visualmente que los 10 módulos tienen su carpeta `dto/` con al menos un archivo.
-- [ ] 12.3 Compilación TypeScript sin errores: ejecutar `npx tsc --noEmit` en `apps/api/` y confirmar salida limpia.
+- [x] 12.1 Ejecutar `rg "@Body\(\) dto: any" apps/api/src/modules/` → cero matches; ejecutar `rg "\.\.\.(data|dto)" apps/api/src/modules/inventory/inventory.service.ts apps/api/src/modules/attendance/attendance.service.ts apps/api/src/modules/guard/guard.service.ts` → cero matches de spread del payload.
+- [x] 12.2 Ejecutar `rg "class CreateVisitDto" apps/api/src/modules/visits/visits.controller.ts` → cero matches (el DTO ya no está inline en el controller); inspeccionar visualmente que los 10 módulos tienen su carpeta `dto/` con al menos un archivo.
+- [x] 12.3 Compilación TypeScript sin errores: ejecutar `npx tsc --noEmit` en `apps/api/` y confirmar salida limpia.
 - [ ] 12.4 Confirmar que `forbidNonWhitelisted: true` y `enableImplicitConversion: false` están presentes en `apps/api/src/main.ts`; smoke test manual opcional: un POST happy-path por módulo → 201 y un POST con campo requerido faltante por módulo → 400.

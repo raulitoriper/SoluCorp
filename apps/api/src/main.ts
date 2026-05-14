@@ -8,7 +8,14 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   // CORS abierto para desarrollo (celular se conecta por IP local)
   app.enableCors({ origin: true, credentials: true });
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: false },
+    }),
+  );
 
   const port = process.env.PORT ?? 3001;
   // Escuchar en 0.0.0.0 para que sea accesible desde la red local

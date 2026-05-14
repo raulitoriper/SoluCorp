@@ -34,6 +34,15 @@
 - Verificación: tsc --noEmit OK (sin errores), cero `dto: any` en los 3 módulos, cero `@Body('status')` en orders, cálculo de `totalAmountGs` preservado en orders.service.ts
 - Próximo batch sugerido: Fase 11 (activar forbidNonWhitelisted en main.ts) + Fase 12 (verificación final)
 
+### Batch 5 (2026-05-14) — Fases 11-12: flag estricto + verificación final
+- Tasks completadas: 11.1, 11.2, 12.1, 12.2, 12.3
+- Tasks pendientes: 11.3, 11.4 (curl con server up — usuario verifica manualmente), 12.4 (smoke test manual — flags en main.ts OK, curl requiere server up)
+- Archivos modificados: apps/api/src/main.ts (ValidationPipe estricto: forbidNonWhitelisted: true, enableImplicitConversion: false)
+- Verificación: tsc --noEmit OK (sin errores), cero "dto: any" en src/modules, cero spreads en inventory/attendance/guard, CreateVisitDto ya no está inline en visits.controller, los 10 módulos tienen carpeta dto/
+- ESLint: FAIL pre-existente — errores de prettier/prettier (formateo) y @typescript-eslint/no-unsafe-member-access en filtros @Query() de varios módulos; NO son regresiones del batch actual
+- Estado del cambio: PARTIAL — listo para archive una vez que el usuario ejecute smoke tests con server up (11.3, 11.4, 12.4)
+- Bloqueador para activar en producción: usuario debe correr curl smoke test contra server up (campos extra → 400, happy path → 201)
+
 ## Estado por fase
 - [x] Fase 0 (mobile audit)
 - [x] Fase 1 (inventory)
@@ -46,5 +55,5 @@
 - [x] Fase 8 (gps)
 - [x] Fase 9 (visits)
 - [x] Fase 10 (metadata)
-- [ ] Fase 11 (flag estricto)
-- [ ] Fase 12 (verificación final)
+- [~] Fase 11 (flag estricto — 11.1 y 11.2 OK; 11.3 y 11.4 pendientes: curl con server up)
+- [~] Fase 12 (verificación final — 12.1, 12.2, 12.3 OK; 12.4 pendiente: smoke test con server up)
