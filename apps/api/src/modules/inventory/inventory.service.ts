@@ -1,12 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { CreateInventoryDto } from './dto/create-inventory.dto';
 
 @Injectable()
 export class InventoryService {
   constructor(private prisma: PrismaService) {}
 
-  create(companyId: string, userId: string, data: any) {
-    return this.prisma.inventoryRecord.create({ data: { companyId, userId, ...data } });
+  create(companyId: string, userId: string, dto: CreateInventoryDto) {
+    return this.prisma.inventoryRecord.create({
+      data: {
+        companyId,
+        userId,
+        depositCode: dto.depositCode,
+        productCode: dto.productCode,
+        quantity: dto.quantity,
+        observation: dto.observation,
+        latitude: dto.latitude,
+        longitude: dto.longitude,
+      },
+    });
   }
 
   findAll(companyId: string, filters?: any) {

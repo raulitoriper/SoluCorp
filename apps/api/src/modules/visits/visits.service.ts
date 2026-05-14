@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { CreateVisitDto } from './dto/create-visit.dto';
 
 @Injectable()
 export class VisitsService {
   constructor(private prisma: PrismaService) {}
 
-  create(companyId: string, userId: string, data: { clientCode: string; motiveCode?: string; eventType: any; observation?: string; latitude?: number; longitude?: number }) {
-    return this.prisma.visit.create({ data: { companyId, userId, ...data } });
+  create(companyId: string, userId: string, dto: CreateVisitDto) {
+    return this.prisma.visit.create({ data: { companyId, userId, ...dto } });
   }
 
   findAll(companyId: string, filters?: { userId?: string; clientCode?: string; from?: string; to?: string }) {

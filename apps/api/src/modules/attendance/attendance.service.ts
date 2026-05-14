@@ -1,12 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { CreateAttendanceDto } from './dto/create-attendance.dto';
 
 @Injectable()
 export class AttendanceService {
   constructor(private prisma: PrismaService) {}
 
-  create(companyId: string, userId: string, data: any) {
-    return this.prisma.attendanceEvent.create({ data: { companyId, userId, ...data } });
+  create(companyId: string, userId: string, dto: CreateAttendanceDto) {
+    return this.prisma.attendanceEvent.create({
+      data: {
+        companyId,
+        userId,
+        employeeCode: dto.employeeCode,
+        eventCategory: dto.eventCategory,
+        eventAction: dto.eventAction,
+        observation: dto.observation,
+        latitude: dto.latitude,
+        longitude: dto.longitude,
+      },
+    });
   }
 
   findAll(companyId: string, filters?: any) {

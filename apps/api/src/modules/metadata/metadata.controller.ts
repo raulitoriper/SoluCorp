@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@n
 import { MetadataService } from './metadata.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
+import { CreateMetadataItemDto, UpdateMetadataItemDto } from './dto/metadata-item.dto';
 
 @Controller('metadata')
 @UseGuards(JwtAuthGuard)
@@ -19,13 +20,13 @@ export class MetadataController {
   }
 
   @Post(':typeCode/items')
-  createItem(@Param('typeCode') typeCode: string, @Body() body: { code: string; value: string; extraData?: any }, @CurrentUser() user: JwtPayload) {
-    return this.metadataService.createItem(user.companyId!, typeCode, body.code, body.value, body.extraData);
+  createItem(@Param('typeCode') typeCode: string, @Body() dto: CreateMetadataItemDto, @CurrentUser() user: JwtPayload) {
+    return this.metadataService.createItem(user.companyId!, typeCode, dto);
   }
 
   @Patch('items/:id')
-  updateItem(@Param('id') id: string, @Body() body: { value: string; extraData?: any }, @CurrentUser() user: JwtPayload) {
-    return this.metadataService.updateItem(user.companyId!, id, body.value, body.extraData);
+  updateItem(@Param('id') id: string, @Body() dto: UpdateMetadataItemDto, @CurrentUser() user: JwtPayload) {
+    return this.metadataService.updateItem(user.companyId!, id, dto);
   }
 
   @Delete('items/:id')

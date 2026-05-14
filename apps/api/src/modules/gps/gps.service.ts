@@ -1,11 +1,12 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { GpsPointDto } from './dto/create-gps-batch.dto';
 
 @Injectable()
 export class GpsService {
   constructor(private prisma: PrismaService) {}
 
-  async createBatch(companyId: string, userId: string, points: any[]) {
+  async createBatch(companyId: string, userId: string, points: GpsPointDto[]) {
     if (!points?.length) throw new BadRequestException('Se requiere al menos un punto GPS');
     if (points.length > 50) throw new BadRequestException('Máximo 50 puntos por batch');
 

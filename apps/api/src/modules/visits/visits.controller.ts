@@ -3,16 +3,7 @@ import { VisitsService } from './visits.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-
-class CreateVisitDto {
-  @IsString() @IsNotEmpty() clientCode: string;
-  @IsOptional() @IsString() motiveCode?: string;
-  @IsEnum(['START', 'END', 'QUICK']) eventType: string;
-  @IsOptional() @IsString() observation?: string;
-  @IsOptional() @IsNumber() latitude?: number;
-  @IsOptional() @IsNumber() longitude?: number;
-}
+import { CreateVisitDto } from './dto/create-visit.dto';
 
 @Controller('visits')
 @UseGuards(JwtAuthGuard, ModuleGuard)
@@ -22,7 +13,7 @@ export class VisitsController {
 
   @Post()
   create(@Body() dto: CreateVisitDto, @CurrentUser() user: JwtPayload) {
-    return this.svc.create(user.companyId!, user.id, dto as any);
+    return this.svc.create(user.companyId!, user.id, dto);
   }
 
   @Get()

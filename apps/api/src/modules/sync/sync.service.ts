@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { SyncItemDto } from './dto/sync-batch.dto';
 
 @Injectable()
 export class SyncService {
   constructor(private prisma: PrismaService) {}
 
-  async processBatch(companyId: string, userId: string, items: { entityType: string; idempotencyKey: string; payload: any }[]) {
+  async processBatch(companyId: string, userId: string, items: SyncItemDto[]) {
     const results = [];
 
     for (const item of items) {
@@ -22,7 +24,7 @@ export class SyncService {
             companyId, userId,
             entityType: item.entityType,
             idempotencyKey: item.idempotencyKey,
-            payload: item.payload,
+            payload: item.payload as Prisma.InputJsonValue,
             status: 'SYNCED',
             processedAt: new Date(),
           },

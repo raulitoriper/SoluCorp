@@ -3,6 +3,7 @@ import { GpsService } from './gps.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
+import { CreateGpsBatchDto } from './dto/create-gps-batch.dto';
 
 @Controller('gps')
 @UseGuards(JwtAuthGuard, ModuleGuard)
@@ -11,8 +12,8 @@ export class GpsController {
   constructor(private svc: GpsService) {}
 
   @Post('batch')
-  createBatch(@Body('points') points: any[], @CurrentUser() user: JwtPayload) {
-    return this.svc.createBatch(user.companyId!, user.id, points);
+  createBatch(@Body() dto: CreateGpsBatchDto, @CurrentUser() user: JwtPayload) {
+    return this.svc.createBatch(user.companyId!, user.id, dto.points);
   }
 
   @Get()

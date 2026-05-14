@@ -3,6 +3,7 @@ import { GuardShiftService } from './guard.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
+import { CreateGuardShiftDto } from './dto/create-guard-shift.dto';
 
 @Controller('guard-shifts')
 @UseGuards(JwtAuthGuard, ModuleGuard)
@@ -11,7 +12,7 @@ export class GuardShiftController {
   constructor(private svc: GuardShiftService) {}
 
   @Post()
-  create(@Body() dto: any, @CurrentUser() user: JwtPayload) {
+  create(@Body() dto: CreateGuardShiftDto, @CurrentUser() user: JwtPayload) {
     return this.svc.create(user.companyId!, user.id, dto);
   }
 

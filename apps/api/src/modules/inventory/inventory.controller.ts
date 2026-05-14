@@ -3,6 +3,7 @@ import { InventoryService } from './inventory.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
+import { CreateInventoryDto } from './dto/create-inventory.dto';
 
 @Controller('inventory')
 @UseGuards(JwtAuthGuard, ModuleGuard)
@@ -11,7 +12,7 @@ export class InventoryController {
   constructor(private svc: InventoryService) {}
 
   @Post()
-  create(@Body() dto: any, @CurrentUser() user: JwtPayload) {
+  create(@Body() dto: CreateInventoryDto, @CurrentUser() user: JwtPayload) {
     return this.svc.create(user.companyId!, user.id, dto);
   }
 
