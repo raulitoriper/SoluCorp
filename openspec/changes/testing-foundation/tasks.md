@@ -25,24 +25,24 @@
 
 ## Fase B: Unit tests P0 backend (orden por riesgo)
 
-- [ ] B.1 Crear `apps/api/src/modules/inventory/inventory.service.spec.ts`: mock de `PrismaService` con `jest.fn()` inline + `Test.createTestingModule`; suite con test "create pasa `companyId` del argumento — NUNCA del dto", test "create asigna campos explícitos (depositCode, productCode, quantity) al data de Prisma", test "findAll filtra solo por `companyId` del argumento"
-- [ ] B.2 Crear `apps/api/src/modules/attendance/attendance.service.spec.ts`: mismo patrón de mock inline; tests de `companyId` del argumento prevalece, campos explícitos (`category`, `action`) en data de Prisma, findAll filtra por companyId
-- [ ] B.3 Crear `apps/api/src/modules/guard/guard.service.spec.ts`: mismo patrón; tests de `companyId` del argumento prevalece, `eventType` explícito en data, default `MARK` cuando `eventType` no se provee
-- [ ] B.4 Crear `apps/api/src/modules/auth/auth.service.spec.ts`: mock de `PrismaService` y `JwtService` con `jest.fn()` inline; tests de login exitoso → retorna `access_token` + `refresh_token`, login con password incorrecta → lanza `UnauthorizedException`, `validateUser` con email inexistente → retorna `null`
-- [ ] B.5 Crear `apps/api/src/modules/auth/guards/jwt-auth.guard.spec.ts`: tests de header `Authorization` ausente → guard retorna false o lanza `UnauthorizedException`, JWT válido con `companyId` → guard retorna true y payload queda en `request.user`, JWT con firma inválida → falla
-- [ ] B.6 Crear `apps/api/src/modules/auth/guards/roles.guard.spec.ts`: tests de usuario con rol requerido `COMPANY_ADMIN` → guard retorna true; usuario con rol `FIELD_WORKER` intentando ruta de `COMPANY_ADMIN` → guard retorna false o lanza `ForbiddenException`
-- [ ] B.7 Crear `apps/api/src/modules/auth/guards/module.guard.spec.ts`: mock de `PrismaService` para simular `company_modules`; tests de módulo habilitado → guard retorna true, módulo deshabilitado → guard retorna false o lanza `ForbiddenException`
-- [ ] B.8 Crear `apps/api/src/modules/sync/sync.service.spec.ts`: mock de `PrismaService` inline; tests de `idempotencyKey` ausente → error o status fallo por item, `idempotencyKey` duplicado → no-op verificable en el mock (no se llama a `create`), batch parcial 3 items con 1 inválido → resultado por item
-- [ ] B.9 Verificar: `cd apps/api && pnpm test` — todos los nuevos specs DEBEN pasar; reportar cobertura actual con `pnpm --filter api test:cov`
+- [x] B.1 Crear `apps/api/src/modules/inventory/inventory.service.spec.ts`: mock de `PrismaService` con `jest.fn()` inline + `Test.createTestingModule`; suite con test "create pasa `companyId` del argumento — NUNCA del dto", test "create asigna campos explícitos (depositCode, productCode, quantity) al data de Prisma", test "findAll filtra solo por `companyId` del argumento"
+- [x] B.2 Crear `apps/api/src/modules/attendance/attendance.service.spec.ts`: mismo patrón de mock inline; tests de `companyId` del argumento prevalece, campos explícitos (`category`, `action`) en data de Prisma, findAll filtra por companyId
+- [x] B.3 Crear `apps/api/src/modules/guard/guard.service.spec.ts`: mismo patrón; tests de `companyId` del argumento prevalece, `eventType` explícito en data, default `MARK` cuando `eventType` no se provee
+- [x] B.4 Crear `apps/api/src/modules/auth/auth.service.spec.ts`: mock de `PrismaService` y `JwtService` con `jest.fn()` inline; tests de login exitoso → retorna `access_token` + `refresh_token`, login con password incorrecta → lanza `UnauthorizedException`, `validateUser` con email inexistente → retorna `null`
+- [x] B.5 Crear `apps/api/src/modules/auth/guards/jwt-auth.guard.spec.ts`: tests de header `Authorization` ausente → guard retorna false o lanza `UnauthorizedException`, JWT válido con `companyId` → guard retorna true y payload queda en `request.user`, JWT con firma inválida → falla
+- [x] B.6 Crear `apps/api/src/modules/auth/guards/roles.guard.spec.ts`: tests de usuario con rol requerido `COMPANY_ADMIN` → guard retorna true; usuario con rol `FIELD_WORKER` intentando ruta de `COMPANY_ADMIN` → guard retorna false o lanza `ForbiddenException`
+- [x] B.7 Crear `apps/api/src/modules/auth/guards/module.guard.spec.ts`: mock de `PrismaService` para simular `company_modules`; tests de módulo habilitado → guard retorna true, módulo deshabilitado → guard retorna false o lanza `ForbiddenException`
+- [x] B.8 Crear `apps/api/src/modules/sync/sync.service.spec.ts`: mock de `PrismaService` inline; tests de `idempotencyKey` ausente → error o status fallo por item, `idempotencyKey` duplicado → no-op verificable en el mock (no se llama a `create`), batch parcial 3 items con 1 inválido → resultado por item
+- [x] B.9 Verificar: `cd apps/api && pnpm test` — todos los nuevos specs DEBEN pasar; reportar cobertura actual con `pnpm --filter api test:cov`
 
 ---
 
 ## Fase C: Refactor W01 (visits.service)
 
-- [ ] C.1 Crear `apps/api/src/modules/visits/visits.service.spec.ts`: mismos patrones B.x; test "create donde dto incluye `companyId` extra → Prisma recibe `companyId` del argumento, no del dto"; test "data de Prisma contiene exactamente: companyId, userId, clientCode, motiveCode, eventType, observation, latitude, longitude — sin spread". **Estos tests DEBEN fallar (rojo) con el código actual**
-- [ ] C.2 Refactorizar `apps/api/src/modules/visits/visits.service.ts`: cambiar `data: { companyId, userId, ...dto }` por campos explícitos (`clientCode`, `motiveCode`, `eventType`, `observation`, `latitude`, `longitude`) — mismo patrón que inventory/attendance/guard
-- [ ] C.3 Verificar: `cd apps/api && pnpm test` — los specs de visits ahora pasan (rojo → verde); confirmar que la suite completa sigue en verde
-- [ ] C.4 Verificar cierre de W01: `rg "\.\.\.dto" apps/api/src/modules/visits/visits.service.ts` — DEBE retornar cero matches
+- [x] C.1 Crear `apps/api/src/modules/visits/visits.service.spec.ts`: mismos patrones B.x; test "create donde dto incluye `companyId` extra → Prisma recibe `companyId` del argumento, no del dto"; test "data de Prisma contiene exactamente: companyId, userId, clientCode, motiveCode, eventType, observation, latitude, longitude — sin spread". **Estos tests DEBEN fallar (rojo) con el código actual**
+- [x] C.2 Refactorizar `apps/api/src/modules/visits/visits.service.ts`: cambiar `data: { companyId, userId, ...dto }` por campos explícitos (`clientCode`, `motiveCode`, `eventType`, `observation`, `latitude`, `longitude`) — mismo patrón que inventory/attendance/guard
+- [x] C.3 Verificar: `cd apps/api && pnpm test` — los specs de visits ahora pasan (rojo → verde); confirmar que la suite completa sigue en verde
+- [x] C.4 Verificar cierre de W01: `rg "\.\.\.dto" apps/api/src/modules/visits/visits.service.ts` — DEBE retornar cero matches
 
 ---
 

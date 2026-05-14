@@ -7,7 +7,18 @@ export class VisitsService {
   constructor(private prisma: PrismaService) {}
 
   create(companyId: string, userId: string, dto: CreateVisitDto) {
-    return this.prisma.visit.create({ data: { companyId, userId, ...dto } });
+    return this.prisma.visit.create({
+      data: {
+        companyId,
+        userId,
+        clientCode: dto.clientCode,
+        motiveCode: dto.motiveCode,
+        eventType: dto.eventType,
+        observation: dto.observation,
+        latitude: dto.latitude,
+        longitude: dto.longitude,
+      },
+    });
   }
 
   findAll(companyId: string, filters?: { userId?: string; clientCode?: string; from?: string; to?: string }) {
