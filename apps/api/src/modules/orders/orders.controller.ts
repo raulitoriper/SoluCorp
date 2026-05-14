@@ -3,6 +3,7 @@ import { OrdersService } from './orders.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
+import { CreateOrderDto, UpdateOrderStatusDto } from './dto/create-order.dto';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard, ModuleGuard)
@@ -11,7 +12,7 @@ export class OrdersController {
   constructor(private svc: OrdersService) {}
 
   @Post()
-  create(@Body() dto: any, @CurrentUser() user: JwtPayload) {
+  create(@Body() dto: CreateOrderDto, @CurrentUser() user: JwtPayload) {
     return this.svc.create(user.companyId!, user.id, dto);
   }
 
@@ -26,7 +27,7 @@ export class OrdersController {
   }
 
   @Patch(':id/status')
-  updateStatus(@Param('id') id: string, @Body('status') status: string, @CurrentUser() user: JwtPayload) {
-    return this.svc.updateStatus(user.companyId!, id, status);
+  updateStatus(@Param('id') id: string, @Body() dto: UpdateOrderStatusDto, @CurrentUser() user: JwtPayload) {
+    return this.svc.updateStatus(user.companyId!, id, dto.status);
   }
 }

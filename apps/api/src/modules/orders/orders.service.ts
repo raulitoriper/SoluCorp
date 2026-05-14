@@ -1,19 +1,21 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { OrderStatus } from '@prisma/client';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
 export class OrdersService {
   constructor(private prisma: PrismaService) {}
 
-  async create(companyId: string, userId: string, dto: any) {
-    const items = (dto.items || []).map((item: any, i: number) => {
+  async create(companyId: string, userId: string, dto: CreateOrderDto) {
+    const items = dto.items.map((item, i) => {
       const qty = Number(item.quantity) || 0;
       const price = Number(item.unitPriceGs) || 0;
       const disc = Number(item.discountPct) || 0;
       const subtotal = Math.round(qty * price * (1 - disc / 100));
       return { lineNumber: i + 1, productCode: item.productCode, quantity: qty, unitPriceGs: price, discountPct: disc, subtotalGs: subtotal };
     });
-    const totalAmountGs = items.reduce((s: number, i: any) => s + (i.subtotalGs || 0), 0);
+    const totalAmountGs = items.reduce((s, i) => s + (i.subtotalGs || 0), 0);
 
     return this.prisma.order.create({
       data: {
@@ -38,9 +40,9 @@ export class OrdersService {
     return this.prisma.order.findFirst({ where: { id, companyId }, include: { items: true } });
   }
 
-  async updateStatus(companyId: string, id: string, status: string) {
+  async updateStatus(companyId: string, id: string, status: OrderStatus) {
     const order = await this.prisma.order.findFirst({ where: { id, companyId } });
     if (!order) throw new NotFoundException('Pedido no encontrado');
-    return this.prisma.order.update({ where: { id }, data: { status: status as any } });
+    return this.prisma.order.update({ where: { id }, data: { status } });
   }
 }

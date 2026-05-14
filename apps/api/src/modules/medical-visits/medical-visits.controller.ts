@@ -3,6 +3,7 @@ import { MedicalVisitsService } from './medical-visits.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
+import { CreateMedicalVisitDto } from './dto/create-medical-visit.dto';
 
 @Controller('medical-visits')
 @UseGuards(JwtAuthGuard, ModuleGuard)
@@ -11,7 +12,7 @@ export class MedicalVisitsController {
   constructor(private svc: MedicalVisitsService) {}
 
   @Post()
-  create(@Body() dto: any, @CurrentUser() user: JwtPayload) {
+  create(@Body() dto: CreateMedicalVisitDto, @CurrentUser() user: JwtPayload) {
     return this.svc.create(user.companyId!, user.id, dto);
   }
 

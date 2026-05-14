@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { CreateCourierDto } from './dto/create-courier.dto';
 
 @Injectable()
 export class CourierService {
   constructor(private prisma: PrismaService) {}
 
-  create(companyId: string, userId: string, dto: any) {
-    const items = (dto.items || []).map((item: any, i: number) => ({
+  create(companyId: string, userId: string, dto: CreateCourierDto) {
+    const items = dto.items.map((item, i) => ({
       lineNumber: i + 1, barcode: item.barcode,
     }));
 

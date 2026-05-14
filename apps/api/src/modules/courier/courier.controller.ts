@@ -3,6 +3,7 @@ import { CourierService } from './courier.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
+import { CreateCourierDto } from './dto/create-courier.dto';
 
 @Controller('courier')
 @UseGuards(JwtAuthGuard, ModuleGuard)
@@ -11,7 +12,7 @@ export class CourierController {
   constructor(private svc: CourierService) {}
 
   @Post()
-  create(@Body() dto: any, @CurrentUser() user: JwtPayload) {
+  create(@Body() dto: CreateCourierDto, @CurrentUser() user: JwtPayload) {
     return this.svc.create(user.companyId!, user.id, dto);
   }
 

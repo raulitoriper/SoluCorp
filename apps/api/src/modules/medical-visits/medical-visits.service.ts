@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { CreateMedicalVisitDto } from './dto/create-medical-visit.dto';
 
 @Injectable()
 export class MedicalVisitsService {
   constructor(private prisma: PrismaService) {}
 
-  create(companyId: string, userId: string, dto: any) {
-    const products = (dto.products || []).map((p: any, i: number) => ({
+  create(companyId: string, userId: string, dto: CreateMedicalVisitDto) {
+    const products = (dto.products ?? []).map((p, i) => ({
       lineNumber: i + 1, productCode: p.productCode, quantity: Number(p.quantity) || 0,
     }));
 

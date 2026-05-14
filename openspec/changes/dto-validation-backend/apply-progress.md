@@ -26,15 +26,23 @@
 - Verificación: tsc --noEmit OK (sin errores), cero "dto: any", cero `@Body('points')` y `@Body('items')` en módulos afectados, cero clase `CreateVisitDto` inline en visits.controller
 - Próximo batch sugerido: Fases 5-7 (orders, medical-visits, courier — anidados)
 
+### Batch 4 (2026-05-14) — Fases 5-7: módulos con arrays anidados
+- Tasks completadas: 5.1, 5.2, 5.3, 5.4, 6.1, 6.2, 6.3, 7.1, 7.2, 7.3
+- Archivos creados: 3 DTOs anidados (create-order.dto.ts, create-medical-visit.dto.ts, create-courier.dto.ts)
+- Archivos modificados: orders.controller.ts, orders.service.ts, medical-visits.controller.ts, medical-visits.service.ts, courier.controller.ts, courier.service.ts
+- Cambio notable: PATCH /orders/:id/status pasó de `@Body('status') status: string` a `@Body() dto: UpdateOrderStatusDto` con `@IsEnum(OrderStatus)`; el cast `status as any` en el service fue eliminado, ahora usa el tipo correcto
+- Verificación: tsc --noEmit OK (sin errores), cero `dto: any` en los 3 módulos, cero `@Body('status')` en orders, cálculo de `totalAmountGs` preservado en orders.service.ts
+- Próximo batch sugerido: Fase 11 (activar forbidNonWhitelisted en main.ts) + Fase 12 (verificación final)
+
 ## Estado por fase
 - [x] Fase 0 (mobile audit)
 - [x] Fase 1 (inventory)
 - [x] Fase 2 (attendance)
 - [x] Fase 3 (guard)
 - [x] Fase 4 (sync)
-- [ ] Fase 5 (orders)
-- [ ] Fase 6 (medical-visits)
-- [ ] Fase 7 (courier)
+- [x] Fase 5 (orders)
+- [x] Fase 6 (medical-visits)
+- [x] Fase 7 (courier)
 - [x] Fase 8 (gps)
 - [x] Fase 9 (visits)
 - [x] Fase 10 (metadata)
