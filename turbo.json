@@ -11,6 +11,16 @@
     },
     "lint": {
       "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**", "test/helpers/**", "package.json", "jest.config.*", "tsconfig*.json"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "outputs": []
     }
   }
 }

@@ -1,6 +1,7 @@
 {
   "name": "solucorp",
   "private": true,
+  "packageManager": "npm@10.5.0",
   "workspaces": [
     "apps/api",
     "apps/admin",
@@ -15,7 +16,9 @@
     "dev:admin": "turbo dev --filter=admin",
     "dev:client": "turbo dev --filter=client",
     "dev:mobile": "cd apps/mobile && npx expo start",
-    "build:packages": "turbo build --filter=@solucorp/*"
+    "build:packages": "turbo build --filter=@solucorp/*",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e"
   },
   "overrides": {
     "react": "19.1.0",

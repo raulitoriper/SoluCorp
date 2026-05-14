@@ -7,19 +7,19 @@
 
 ## Fase A: Setup mínimo (sin tests funcionales)
 
-- [ ] A.1 Bump `ts-jest` a `^29.4.0` en `apps/api/package.json` (campo `devDependencies`) y correr `pnpm install` desde la raíz — resuelve riesgo R1 de compatibilidad con `jest@30`
-- [ ] A.2 Crear `apps/api/.env.test.example` con las tres variables plantilla: `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/solucorp_test`, `JWT_SECRET=test-secret-do-not-use-in-prod`, `JWT_EXPIRES_IN=8h` (archivo commiteable)
-- [ ] A.3 Crear `apps/api/.env.test` copiando el example con valores reales de Postgres local y agregar `apps/api/.env.test` a `apps/api/.gitignore` (o al `.gitignore` raíz si el entry no existe)
-- [ ] A.4 Crear `apps/api/test/setup-env.ts`: llama `dotenv.config({ path: resolve(__dirname, '../.env.test') })` y lanza `Error` con mensaje `"[setup-env] DATABASE_URL debe contener literal "test"..."` si la URL cargada no incluye literal `"test"`
-- [ ] A.5 Sobrescribir `apps/api/test/jest-e2e.json` (YA EXISTE — no crear) con config completa: `rootDir: "."`, `testRegex: ".e2e-spec.ts$"`, `setupFiles: ["<rootDir>/setup-env.ts"]`, `testTimeout: 30000`, `maxWorkers: 1`
-- [ ] A.6 Crear `apps/api/test/helpers/db.ts` con función `truncateAll(prisma: PrismaService)`: valida `DATABASE_URL.includes('test')` y lanza error descriptivo si no; ejecuta `TRUNCATE TABLE ... RESTART IDENTITY CASCADE` con la lista canónica de 20 tablas en una sola sentencia
-- [ ] A.7 Crear `apps/api/test/helpers/auth.ts` con cuatro exports: `createTestCompany`, `createTestUser` (bcrypt rounds=4), `signTokenFor` (JWT directo vía `JwtService` sin HTTP), `loginViaHttp` (supertest contra `POST /api/auth/login`)
-- [ ] A.8 Actualizar bloque `jest` en `apps/api/package.json`: agregar `collectCoverageFrom` (excluye `*.module.ts`, `*.dto.ts`, `dto/**`, `main.ts`, `*.spec.ts`, `index.ts`) y `coverageReporters: ["text","lcov","html"]` — NO agregar `coverageThreshold`
-- [ ] A.9 Crear `packages/shared/jest.config.ts` (preset ts-jest, testEnvironment node, rootDir src, testRegex `\.spec\.ts$`, collectCoverageFrom) + agregar `jest@^30.0.0`, `ts-jest@^29.4.0`, `@types/jest@^30.0.0` a devDependencies de `packages/shared/package.json` + script `"test": "jest"`
-- [ ] A.10 Crear `packages/ui/jest.config.ts` (preset ts-jest, testEnvironment jsdom, rootDir src, setupFilesAfterEach apuntando a `../jest.setup.ts`) + crear `packages/ui/jest.setup.ts` con `import '@testing-library/jest-dom'` + agregar `jest@^30`, `ts-jest@^29.4`, `@types/jest@^30`, `jest-environment-jsdom@^30`, `@testing-library/react@^16.1.0`, `@testing-library/jest-dom@^6.6.0`, `react@^19.0.0` (dev), `react-dom@^19.0.0` (dev) a devDependencies de `packages/ui/package.json` + script `"test": "jest"`
-- [ ] A.11 Actualizar `turbo.json`: agregar task `test` (dependsOn `^build`, outputs `coverage/**`, inputs `src/**`, `test/helpers/**`, `package.json`, `jest.config.*`, `tsconfig*.json`) y task `test:e2e` (dependsOn `^build`, `cache: false`, outputs `[]`)
-- [ ] A.12 Agregar scripts `"test": "turbo run test"` y `"test:e2e": "turbo run test:e2e"` al root `package.json`
-- [ ] A.13 Sanity check: ejecutar `pnpm test` desde la raíz — DEBE correr el único `app.controller.spec.ts` existente sin error y retornar exit 0
+- [x] A.1 Bump `ts-jest` a `^29.4.0` en `apps/api/package.json` (campo `devDependencies`) y correr `pnpm install` desde la raíz — resuelve riesgo R1 de compatibilidad con `jest@30`
+- [x] A.2 Crear `apps/api/.env.test.example` con las tres variables plantilla: `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/solucorp_test`, `JWT_SECRET=test-secret-do-not-use-in-prod`, `JWT_EXPIRES_IN=8h` (archivo commiteable)
+- [x] A.3 Crear `apps/api/.env.test` copiando el example con valores reales de Postgres local y agregar `apps/api/.env.test` a `apps/api/.gitignore` (o al `.gitignore` raíz si el entry no existe)
+- [x] A.4 Crear `apps/api/test/setup-env.ts`: llama `dotenv.config({ path: resolve(__dirname, '../.env.test') })` y lanza `Error` con mensaje `"[setup-env] DATABASE_URL debe contener literal "test"..."` si la URL cargada no incluye literal `"test"`
+- [x] A.5 Sobrescribir `apps/api/test/jest-e2e.json` (YA EXISTE — no crear) con config completa: `rootDir: "."`, `testRegex: ".e2e-spec.ts$"`, `setupFiles: ["<rootDir>/setup-env.ts"]`, `testTimeout: 30000`, `maxWorkers: 1`
+- [x] A.6 Crear `apps/api/test/helpers/db.ts` con función `truncateAll(prisma: PrismaService)`: valida `DATABASE_URL.includes('test')` y lanza error descriptivo si no; ejecuta `TRUNCATE TABLE ... RESTART IDENTITY CASCADE` con la lista canónica de 20 tablas en una sola sentencia
+- [x] A.7 Crear `apps/api/test/helpers/auth.ts` con cuatro exports: `createTestCompany`, `createTestUser` (bcrypt rounds=4), `signTokenFor` (JWT directo vía `JwtService` sin HTTP), `loginViaHttp` (supertest contra `POST /api/auth/login`)
+- [x] A.8 Actualizar bloque `jest` en `apps/api/package.json`: agregar `collectCoverageFrom` (excluye `*.module.ts`, `*.dto.ts`, `dto/**`, `main.ts`, `*.spec.ts`, `index.ts`) y `coverageReporters: ["text","lcov","html"]` — NO agregar `coverageThreshold`
+- [x] A.9 Crear `packages/shared/jest.config.ts` (preset ts-jest, testEnvironment node, rootDir src, testRegex `\.spec\.ts$`, collectCoverageFrom) + agregar `jest@^30.0.0`, `ts-jest@^29.4.0`, `@types/jest@^30.0.0` a devDependencies de `packages/shared/package.json` + script `"test": "jest"`
+- [x] A.10 Crear `packages/ui/jest.config.ts` (preset ts-jest, testEnvironment jsdom, rootDir src, setupFilesAfterEach apuntando a `../jest.setup.ts`) + crear `packages/ui/jest.setup.ts` con `import '@testing-library/jest-dom'` + agregar `jest@^30`, `ts-jest@^29.4`, `@types/jest@^30`, `jest-environment-jsdom@^30`, `@testing-library/react@^16.1.0`, `@testing-library/jest-dom@^6.6.0`, `react@^19.0.0` (dev), `react-dom@^19.0.0` (dev) a devDependencies de `packages/ui/package.json` + script `"test": "jest"`
+- [x] A.11 Actualizar `turbo.json`: agregar task `test` (dependsOn `^build`, outputs `coverage/**`, inputs `src/**`, `test/helpers/**`, `package.json`, `jest.config.*`, `tsconfig*.json`) y task `test:e2e` (dependsOn `^build`, `cache: false`, outputs `[]`)
+- [x] A.12 Agregar scripts `"test": "turbo run test"` y `"test:e2e": "turbo run test:e2e"` al root `package.json`
+- [x] A.13 Sanity check: ejecutar `pnpm test` desde la raíz — DEBE correr el único `app.controller.spec.ts` existente sin error y retornar exit 0
 
 ---
 
