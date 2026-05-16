@@ -96,3 +96,59 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Testing
+
+El backend usa Jest con dos suites: **unit** (Prisma mockeado) y **e2e** (PostgreSQL real).
+
+### Unit tests
+
+```bash
+npm test
+```
+
+Corre todos los `*.spec.ts` co-located en `src/`. Sin DB, ~3s.
+
+### E2e tests
+
+Requieren PostgreSQL local con DB `solucorp_test`.
+
+**Setup inicial (una vez):**
+
+```bash
+createdb solucorp_test
+DATABASE_URL="postgresql://postgres:<pass>@localhost:5432/solucorp_test" \
+  npx prisma migrate deploy
+```
+
+Copiá `.env.test.example` a `.env.test` y completá las credenciales:
+
+```bash
+cp apps/api/.env.test.example apps/api/.env.test
+# Editá apps/api/.env.test con tus credenciales locales
+```
+
+**Correr suite e2e:**
+
+```bash
+npm run test:e2e
+```
+
+Levanta AppModule + truncate por test + supertest. ~25s.
+
+### Coverage
+
+```bash
+npm run test:cov
+```
+
+Genera `coverage/lcov-report/index.html` para drill-down humano.
+
+```bash
+open coverage/lcov-report/index.html
+```
+
+### Helpers
+
+- `test/helpers/db.ts` — `truncateAll(prisma)` con guardarraíl que verifica `DATABASE_URL` contiene literal `"test"`.
+- `test/helpers/auth.ts` — `createTestCompany`, `createTestUser`, `signTokenFor`, `loginViaHttp`.

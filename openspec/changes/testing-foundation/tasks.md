@@ -66,30 +66,30 @@
 
 ## Fase E: Tests de packages
 
-- [ ] E.1 Crear `packages/shared/src/utils/format.spec.ts`: al menos un test con caso válido + al menos un edge case (null, undefined, vacío, límites de dominio) por CADA función exportada en `utils/format.ts` — sin mocks (funciones puras)
-- [ ] E.2 Crear `packages/shared/src/constants/service-codes.spec.ts`, `packages/shared/src/constants/meta-names.spec.ts` y `packages/shared/src/constants/roles.spec.ts`: smoke por cada uno — export no vacío, tipo correcto, al menos una clave conocida con valor esperado; NO usar snapshots
-- [ ] E.4 Crear `packages/ui/src/Button/index.spec.tsx`: tests de render sin error + `toBeInTheDocument()`, `disabled={true}` → atributo disabled presente, click → `onClick` invocado
-- [ ] E.5 Crear `packages/ui/src/Input/index.spec.tsx`: tests de render + `toBeInTheDocument()`, `placeholder` se renderiza, `fireEvent.change` → `onChange` invocado con valor correcto
-- [ ] E.6 Crear `packages/ui/src/Card/index.spec.tsx`: tests de render + `toBeInTheDocument()`, children se renderiza en el documento
-- [ ] E.7 Crear `packages/ui/src/Modal/index.spec.tsx`: tests de render, `open={false}` → modal NO visible, `open={true}` → modal visible
-- [ ] E.8 Verificar: `pnpm --filter @solucorp/shared test` y `pnpm --filter @solucorp/ui test` DEBEN pasar; `packages/shared` reporta ≥ 70% coverage en `utils/format.ts`
+- [x] E.1 Crear `packages/shared/src/utils/format.spec.ts`: al menos un test con caso válido + al menos un edge case (null, undefined, vacío, límites de dominio) por CADA función exportada en `utils/format.ts` — sin mocks (funciones puras)
+- [x] E.2 Crear `packages/shared/src/constants/service-codes.spec.ts`, `packages/shared/src/constants/meta-names.spec.ts` y `packages/shared/src/constants/roles.spec.ts`: smoke por cada uno — export no vacío, tipo correcto, al menos una clave conocida con valor esperado; NO usar snapshots
+- [x] E.4 Crear `packages/ui/src/components/Button.spec.tsx`: tests de render sin error + `toBeInTheDocument()`, `disabled={true}` → atributo disabled presente, click → `onClick` invocado
+- [x] E.5 Crear `packages/ui/src/components/Input.spec.tsx`: tests de render + `toBeInTheDocument()`, `placeholder` se renderiza, `fireEvent.change` → `onChange` invocado con valor correcto
+- [x] E.6 Crear `packages/ui/src/components/Card.spec.tsx`: tests de render + `toBeInTheDocument()`, children se renderiza en el documento
+- [x] E.7 Crear `packages/ui/src/components/Modal.spec.tsx`: tests de render, `isOpen={false}` → modal NO visible, `isOpen={true}` → modal visible
+- [x] E.8 Verificar: `npm run test --workspace packages/shared` y `npm run test --workspace packages/ui` DEBEN pasar; `packages/shared` reporta 100% coverage en `utils/format.ts`
 
 ---
 
 ## Fase F: Documentación
 
-- [ ] F.1 Actualizar `apps/api/README.md`: agregar sección "Testing" con subsecciones — cómo correr unit (`pnpm test` o `pnpm --filter api test`), cómo crear la DB de test (`createdb solucorp_test && pnpm prisma migrate deploy`), cómo copiar el env template (`cp apps/api/.env.test.example apps/api/.env.test`), cómo correr e2e (`pnpm test:e2e`), cómo ver coverage HTML (`open coverage/lcov-report/index.html`)
-- [ ] F.2 Crear o actualizar `packages/shared/README.md`: descripción del paquete + instrucciones `pnpm --filter @solucorp/shared test`
-- [ ] F.3 Crear o actualizar `packages/ui/README.md`: descripción del paquete + instrucciones `pnpm --filter @solucorp/ui test`
-- [ ] F.4 Actualizar root `README.md`: agregar sección "Running tests" con `pnpm test` (unit de todo el scope) y `pnpm test:e2e` (requiere PostgreSQL local configurado en `apps/api/.env.test`)
+- [x] F.1 Actualizar `apps/api/README.md`: agregar sección "Testing" con subsecciones — cómo correr unit, cómo crear la DB de test, cómo copiar el env template, cómo correr e2e, cómo ver coverage HTML
+- [x] F.2 Crear o actualizar `packages/shared/README.md`: descripción del paquete + instrucciones de test
+- [x] F.3 Crear o actualizar `packages/ui/README.md`: descripción del paquete + instrucciones de test
+- [x] F.4 Crear root `README.md` (no existía): incluye sección "Tests" con `npm test` y `npm run test:e2e`
 
 ---
 
 ## Fase G: Verificación final del cambio
 
-- [ ] G.1 `pnpm test` desde root retorna exit 0 — corre unit en apps/api + packages/shared + packages/ui
-- [ ] G.2 `pnpm test:e2e` desde root retorna exit 0 con DB de test activa
-- [ ] G.3 `pnpm --filter api test:cov` reporta ≥ 40% statement coverage en `apps/api` (métrica aspiracional — NO bloqueante)
-- [ ] G.4 `pnpm --filter @solucorp/shared test --coverage` reporta ≥ 70% coverage en `utils/format.ts`
-- [ ] G.5 Verificar invariantes de código: `rg "\.\.\.dto" apps/api/src/modules/visits/visits.service.ts` → 0 matches (W01 cerrada); `rg "includes\('test'\)" apps/api/test/helpers/db.ts` → al menos 1 match (guardarraíl presente)
-- [ ] G.6 `tsc --noEmit` en `apps/api` retorna exit 0 (sin errores de tipos introducidos por los specs)
+- [x] G.1 `npm test` desde root retorna exit 0 — 52 (api) + 38 (shared) + 20 (ui) = 110 tests unit
+- [x] G.2 `npm run test:e2e` desde root retorna exit 0 — 80 tests e2e (12 suites)
+- [x] G.3 `npm run test:cov` en apps/api — 25.99% statements (meta 40% aspiracional — reportado, no bloqueante)
+- [x] G.4 `npx jest --coverage` en packages/shared — utils/format.ts: 100%, constants: 100%, total shared: 39.47% (meta 70% en format.ts: superada)
+- [x] G.5 Verificar W01: grep `...dto` en visits.service.ts → 0 matches; guardarraíl db.ts → presente
+- [x] G.6 `tsc --noEmit` en apps/api → exit 0 (sin errores de tipos)
