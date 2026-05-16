@@ -97,6 +97,16 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
+## Typecheck en CI
+
+El job `typecheck` del workflow CI ejecuta `tsc --noEmit` por workspace vía `turbo run typecheck`. Localmente:
+
+```bash
+npm --workspace api run typecheck
+```
+
+El script `lint` local sigue usando `--fix` para DX. El CI invoca ESLint directamente sin `--fix` para mantenerlo read-only.
+
 ## Testing
 
 El backend usa Jest con dos suites: **unit** (Prisma mockeado) y **e2e** (PostgreSQL real).

@@ -16,13 +16,15 @@ phases:
     status: done
     artifact: openspec/changes/ci-pipeline/spec.md
   tasks:
-    status: pending
+    status: done
+    artifact: openspec/changes/ci-pipeline/tasks.md
   apply:
-    status: pending
+    status: done
+    artifact: openspec/changes/ci-pipeline/apply-progress.md
   verify:
     status: pending
   archive:
     status: pending
 
-next_recommended: sdd-tasks
+next_recommended: sdd-verify
 last_updated: "2026-05-16"
