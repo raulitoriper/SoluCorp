@@ -66,12 +66,44 @@
 
 ---
 
+---
+
+### Batch 3 (2026-05-16) — Fase D: e2e tests backend
+
+- Tasks completadas: D.1, D.2, D.3, D.4, D.5, D.6, D.7, D.8, D.9, D.10, D.11, D.12, D.13
+- Archivos creados:
+  - `apps/api/test/validation-pipe.e2e-spec.ts` — 5 tests transversales (campo extra, companyId en body, tipo string, items vacío, sin auth)
+  - `apps/api/test/multi-tenant.e2e-spec.ts` — 6 tests transversales (inventory + visits + attendance entre 2 empresas)
+  - `apps/api/test/inventory.e2e-spec.ts` — 7 tests (6 POST + 1 GET)
+  - `apps/api/test/attendance.e2e-spec.ts` — 5 tests
+  - `apps/api/test/guard.e2e-spec.ts` — 6 tests (path /api/guard-shifts)
+  - `apps/api/test/visits.e2e-spec.ts` — 5 tests
+  - `apps/api/test/orders.e2e-spec.ts` — 8 tests (6 POST + 2 PATCH)
+  - `apps/api/test/medical-visits.e2e-spec.ts` — 8 tests
+  - `apps/api/test/courier.e2e-spec.ts` — 7 tests
+  - `apps/api/test/gps.e2e-spec.ts` — 8 tests (6 batch + 1 last-positions + 1 limit 51)
+  - `apps/api/test/sync.e2e-spec.ts` — 6 tests
+  - `apps/api/test/metadata.e2e-spec.ts` — 8 tests
+- Tests e2e pasados: 80 (nuevos) de 80 corriendo sobre 12 nuevos archivos
+- Tests preexistentes: app.e2e-spec.ts tiene 1 falla histórica (GET / → 404 porque global prefix 'api' ya estaba activo desde el commit original); NO es regresión de este batch
+- Verificación: `npx jest --config test/jest-e2e.json --forceExit` — 13 suites, 80 passed / 1 failed (preexistente)
+- Decisiones tomadas:
+  - Guard: path correcto es `/api/guard-shifts` (controller usa @Controller('guard-shifts')), no `/api/guard`. Enum `GuardShiftEventType` usa `SHIFT_START` / `SHIFT_END` / `MARK`, no `START`.
+  - Medical-visits: DTO no tiene campo `clientCode`. Único campo requerido es `eventType`. Tests ajustados a la realidad del DTO.
+  - Courier: `receiverName` es opcional en el DTO (no requerido). Campo requerido real es `status`.
+  - Sync: `@Post('batch')` sin `@HttpCode()` retorna 201 (NestJS default), no 200. Tests corregidos.
+  - Metadata: no existe endpoint `/api/metadata/types` para POST. Solo existe `/api/metadata/:typeCode/items`. Tests ajustados al controller real. Se usa prisma directo para crear metadataType en setup.
+  - Inventory `quantity`: Prisma Decimal se serializa como string en JSON. Aserción usa `Number()`.
+- Próximo batch sugerido: Fases E + F + G (packages + docs + verificación final)
+
+---
+
 ## Estado por fase
 
 - [x] Fase A (setup)
 - [x] Fase B (unit P0)
 - [x] Fase C (refactor W01)
-- [ ] Fase D (e2e)
+- [x] Fase D (e2e) — 80/81 tests pasando (1 falla en app.e2e-spec.ts preexistente desde commit inicial)
 - [ ] Fase E (packages)
 - [ ] Fase F (docs)
 - [ ] Fase G (verificación final)
