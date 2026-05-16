@@ -12,16 +12,23 @@ export class SyncService {
 
     for (const item of items) {
       // Verificar si ya fue procesado (idempotency)
-      const existing = await this.prisma.syncQueueItem.findUnique({ where: { idempotencyKey: item.idempotencyKey } });
+      const existing = await this.prisma.syncQueueItem.findUnique({
+        where: { idempotencyKey: item.idempotencyKey },
+      });
       if (existing) {
-        results.push({ idempotencyKey: item.idempotencyKey, status: 'ALREADY_SYNCED', resultId: existing.resultId });
+        results.push({
+          idempotencyKey: item.idempotencyKey,
+          status: 'ALREADY_SYNCED',
+          resultId: existing.resultId,
+        });
         continue;
       }
 
       try {
         const created = await this.prisma.syncQueueItem.create({
           data: {
-            companyId, userId,
+            companyId,
+            userId,
             entityType: item.entityType,
             idempotencyKey: item.idempotencyKey,
             payload: item.payload as Prisma.InputJsonValue,
@@ -29,9 +36,17 @@ export class SyncService {
             processedAt: new Date(),
           },
         });
-        results.push({ idempotencyKey: item.idempotencyKey, status: 'SYNCED', id: created.id });
+        results.push({
+          idempotencyKey: item.idempotencyKey,
+          status: 'SYNCED',
+          id: created.id,
+        });
       } catch (error: any) {
-        results.push({ idempotencyKey: item.idempotencyKey, status: 'FAILED', error: error.message });
+        results.push({
+          idempotencyKey: item.idempotencyKey,
+          status: 'FAILED',
+          error: error.message,
+        });
       }
     }
 

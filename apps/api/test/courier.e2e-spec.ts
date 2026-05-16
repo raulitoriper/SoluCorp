@@ -4,7 +4,11 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/common/prisma/prisma.service';
 import { truncateAll } from './helpers/db';
-import { createTestCompany, createTestUser, signTokenFor } from './helpers/auth';
+import {
+  createTestCompany,
+  createTestUser,
+  signTokenFor,
+} from './helpers/auth';
 
 /**
  * Nota: el DTO de CreateCourierDto requiere 'status' (enum CourierDeliveryStatus) e 'items' (array).
@@ -85,7 +89,11 @@ describe('Courier (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post('/api/courier')
         .set('Authorization', `Bearer ${token}`)
-        .send({ status: 'DELIVERED', items: [{ barcode: 'BC001' }], extraField: 'no_permitido' })
+        .send({
+          status: 'DELIVERED',
+          items: [{ barcode: 'BC001' }],
+          extraField: 'no_permitido',
+        })
         .expect(400);
 
       expect(res.body.statusCode).toBe(400);

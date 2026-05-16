@@ -23,8 +23,18 @@ export class AttendanceService {
 
   findAll(companyId: string, filters?: any) {
     return this.prisma.attendanceEvent.findMany({
-      where: { companyId, ...(filters?.employeeCode && { employeeCode: filters.employeeCode }), ...(filters?.from && { markedAt: { gte: new Date(filters.from), ...(filters?.to && { lt: new Date(filters.to) }) } }) },
-      orderBy: { markedAt: 'desc' }, take: 200,
+      where: {
+        companyId,
+        ...(filters?.employeeCode && { employeeCode: filters.employeeCode }),
+        ...(filters?.from && {
+          markedAt: {
+            gte: new Date(filters.from),
+            ...(filters?.to && { lt: new Date(filters.to) }),
+          },
+        }),
+      },
+      orderBy: { markedAt: 'desc' },
+      take: 200,
     });
   }
 

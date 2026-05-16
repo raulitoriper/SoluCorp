@@ -4,7 +4,11 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/common/prisma/prisma.service';
 import { truncateAll } from './helpers/db';
-import { createTestCompany, createTestUser, signTokenFor } from './helpers/auth';
+import {
+  createTestCompany,
+  createTestUser,
+  signTokenFor,
+} from './helpers/auth';
 
 /**
  * Módulo guard: el controller usa @Controller('guard-shifts').
@@ -86,7 +90,12 @@ describe('Guard Shifts (e2e)', () => {
         .send({ guardCode: 'G001', companyId: 'otro-tenant' })
         .expect(400);
 
-      expect(res.body.message.some((m: string) => m.includes('companyId') && m.includes('should not exist'))).toBe(true);
+      expect(
+        res.body.message.some(
+          (m: string) =>
+            m.includes('companyId') && m.includes('should not exist'),
+        ),
+      ).toBe(true);
     });
 
     it('válido → 201 con companyId del JWT', async () => {

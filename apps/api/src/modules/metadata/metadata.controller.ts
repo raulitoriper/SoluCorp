@@ -1,8 +1,23 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { MetadataService } from './metadata.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
-import { CreateMetadataItemDto, UpdateMetadataItemDto } from './dto/metadata-item.dto';
+import {
+  CurrentUser,
+  JwtPayload,
+} from '../../common/decorators/current-user.decorator';
+import {
+  CreateMetadataItemDto,
+  UpdateMetadataItemDto,
+} from './dto/metadata-item.dto';
 
 @Controller('metadata')
 @UseGuards(JwtAuthGuard)
@@ -15,17 +30,28 @@ export class MetadataController {
   }
 
   @Get(':typeCode/items')
-  findItems(@Param('typeCode') typeCode: string, @CurrentUser() user: JwtPayload) {
+  findItems(
+    @Param('typeCode') typeCode: string,
+    @CurrentUser() user: JwtPayload,
+  ) {
     return this.metadataService.findItems(user.companyId!, typeCode);
   }
 
   @Post(':typeCode/items')
-  createItem(@Param('typeCode') typeCode: string, @Body() dto: CreateMetadataItemDto, @CurrentUser() user: JwtPayload) {
+  createItem(
+    @Param('typeCode') typeCode: string,
+    @Body() dto: CreateMetadataItemDto,
+    @CurrentUser() user: JwtPayload,
+  ) {
     return this.metadataService.createItem(user.companyId!, typeCode, dto);
   }
 
   @Patch('items/:id')
-  updateItem(@Param('id') id: string, @Body() dto: UpdateMetadataItemDto, @CurrentUser() user: JwtPayload) {
+  updateItem(
+    @Param('id') id: string,
+    @Body() dto: UpdateMetadataItemDto,
+    @CurrentUser() user: JwtPayload,
+  ) {
     return this.metadataService.updateItem(user.companyId!, id, dto);
   }
 

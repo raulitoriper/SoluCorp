@@ -8,6 +8,6 @@ config({ path: resolve(__dirname, '../.env.test') });
 if (!process.env.DATABASE_URL?.includes('test')) {
   throw new Error(
     `[setup-env] DATABASE_URL debe contener literal "test". ` +
-    `Verificá apps/api/.env.test`,
+      `Verificá apps/api/.env.test`,
   );
 }

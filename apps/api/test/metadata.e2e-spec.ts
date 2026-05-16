@@ -4,7 +4,11 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/common/prisma/prisma.service';
 import { truncateAll } from './helpers/db';
-import { createTestCompany, createTestUser, signTokenFor } from './helpers/auth';
+import {
+  createTestCompany,
+  createTestUser,
+  signTokenFor,
+} from './helpers/auth';
 
 /**
  * Módulo metadata:
@@ -141,7 +145,12 @@ describe('Metadata (e2e)', () => {
         data: { companyId, code: 'TIPO05', name: 'Tipo 5' },
       });
       const item = await prisma.metadataItem.create({
-        data: { companyId, metadataTypeId: tipo.id, code: 'ITEM01', value: 'Valor original' },
+        data: {
+          companyId,
+          metadataTypeId: tipo.id,
+          code: 'ITEM01',
+          value: 'Valor original',
+        },
       });
 
       const res = await request(app.getHttpServer())
@@ -158,7 +167,12 @@ describe('Metadata (e2e)', () => {
         data: { companyId, code: 'TIPO06', name: 'Tipo 6' },
       });
       const item = await prisma.metadataItem.create({
-        data: { companyId, metadataTypeId: tipo.id, code: 'ITEM02', value: 'Valor original' },
+        data: {
+          companyId,
+          metadataTypeId: tipo.id,
+          code: 'ITEM02',
+          value: 'Valor original',
+        },
       });
 
       const res = await request(app.getHttpServer())

@@ -1,4 +1,11 @@
-import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateCompanyDto {
   @IsString() @IsNotEmpty() name: string;
@@ -29,6 +36,10 @@ export class UpdateCompanyDto {
 }
 
 export class UpdateSubscriptionDto {
-  @IsOptional() @IsEnum(['BASIC', 'STANDARD', 'PREMIUM', 'ENTERPRISE', 'CUSTOM']) planType?: string;
-  @IsOptional() @IsEnum(['DEMO', 'ACTIVE', 'SUSPENDED', 'CANCELLED']) status?: string;
+  @IsOptional()
+  @IsEnum(['BASIC', 'STANDARD', 'PREMIUM', 'ENTERPRISE', 'CUSTOM'])
+  planType?: string;
+  @IsOptional()
+  @IsEnum(['DEMO', 'ACTIVE', 'SUSPENDED', 'CANCELLED'])
+  status?: string;
 }

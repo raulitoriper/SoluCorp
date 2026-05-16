@@ -39,7 +39,7 @@ describe('InventoryService', () => {
         depositCode: 'D01',
         productCode: 'P01',
         quantity: 10,
-      } as any);
+      });
 
       const callArg = prisma.inventoryRecord.create.mock.calls[0][0].data;
       expect(callArg.companyId).toBe('cmp-real');
@@ -70,7 +70,7 @@ describe('InventoryService', () => {
         observation: 'test obs',
         latitude: -25.3,
         longitude: -57.5,
-      } as any);
+      });
 
       const callArg = prisma.inventoryRecord.create.mock.calls[0][0].data;
       expect(callArg).toMatchObject({
@@ -108,7 +108,9 @@ describe('InventoryService', () => {
     });
 
     it('no debe retornar registros de otro tenant', async () => {
-      prisma.inventoryRecord.findMany.mockResolvedValue([{ id: 'r1', companyId: 'cmp-A' }]);
+      prisma.inventoryRecord.findMany.mockResolvedValue([
+        { id: 'r1', companyId: 'cmp-A' },
+      ]);
 
       const result = await service.findAll('cmp-A');
 

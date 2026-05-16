@@ -23,8 +23,18 @@ export class GuardShiftService {
 
   findAll(companyId: string, filters?: any) {
     return this.prisma.guardShift.findMany({
-      where: { companyId, ...(filters?.guardCode && { guardCode: filters.guardCode }), ...(filters?.from && { markedAt: { gte: new Date(filters.from), ...(filters?.to && { lt: new Date(filters.to) }) } }) },
-      orderBy: { markedAt: 'desc' }, take: 100,
+      where: {
+        companyId,
+        ...(filters?.guardCode && { guardCode: filters.guardCode }),
+        ...(filters?.from && {
+          markedAt: {
+            gte: new Date(filters.from),
+            ...(filters?.to && { lt: new Date(filters.to) }),
+          },
+        }),
+      },
+      orderBy: { markedAt: 'desc' },
+      take: 100,
     });
   }
 

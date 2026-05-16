@@ -4,7 +4,11 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/common/prisma/prisma.service';
 import { truncateAll } from './helpers/db';
-import { createTestCompany, createTestUser, signTokenFor } from './helpers/auth';
+import {
+  createTestCompany,
+  createTestUser,
+  signTokenFor,
+} from './helpers/auth';
 
 describe('Attendance (e2e)', () => {
   let app: INestApplication;
@@ -67,7 +71,11 @@ describe('Attendance (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post('/api/attendance')
         .set('Authorization', `Bearer ${token}`)
-        .send({ employeeCode: 'EMP001', eventCategory: 'INVALID_CAT', eventAction: 'IN' })
+        .send({
+          employeeCode: 'EMP001',
+          eventCategory: 'INVALID_CAT',
+          eventAction: 'IN',
+        })
         .expect(400);
 
       expect(res.body.statusCode).toBe(400);
@@ -78,7 +86,11 @@ describe('Attendance (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post('/api/attendance')
         .set('Authorization', `Bearer ${token}`)
-        .send({ employeeCode: 'EMP001', eventCategory: 'PRESENCE', eventAction: 'INVALID_ACTION' })
+        .send({
+          employeeCode: 'EMP001',
+          eventCategory: 'PRESENCE',
+          eventAction: 'INVALID_ACTION',
+        })
         .expect(400);
 
       expect(res.body.statusCode).toBe(400);
@@ -97,7 +109,12 @@ describe('Attendance (e2e)', () => {
         })
         .expect(400);
 
-      expect(res.body.message.some((m: string) => m.includes('companyId') && m.includes('should not exist'))).toBe(true);
+      expect(
+        res.body.message.some(
+          (m: string) =>
+            m.includes('companyId') && m.includes('should not exist'),
+        ),
+      ).toBe(true);
     });
 
     it('válido → 201 con companyId del JWT', async () => {

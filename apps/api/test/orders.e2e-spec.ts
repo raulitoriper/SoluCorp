@@ -4,7 +4,11 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/common/prisma/prisma.service';
 import { truncateAll } from './helpers/db';
-import { createTestCompany, createTestUser, signTokenFor } from './helpers/auth';
+import {
+  createTestCompany,
+  createTestUser,
+  signTokenFor,
+} from './helpers/auth';
 
 describe('Orders (e2e)', () => {
   let app: INestApplication;
@@ -124,7 +128,10 @@ describe('Orders (e2e)', () => {
       const created = await request(app.getHttpServer())
         .post('/api/orders')
         .set('Authorization', `Bearer ${token}`)
-        .send({ clientCode: 'CLI001', items: [{ productCode: 'P01', quantity: 1 }] })
+        .send({
+          clientCode: 'CLI001',
+          items: [{ productCode: 'P01', quantity: 1 }],
+        })
         .expect(201);
 
       const res = await request(app.getHttpServer())
@@ -140,7 +147,10 @@ describe('Orders (e2e)', () => {
       const created = await request(app.getHttpServer())
         .post('/api/orders')
         .set('Authorization', `Bearer ${token}`)
-        .send({ clientCode: 'CLI001', items: [{ productCode: 'P01', quantity: 1 }] })
+        .send({
+          clientCode: 'CLI001',
+          items: [{ productCode: 'P01', quantity: 1 }],
+        })
         .expect(201);
 
       const res = await request(app.getHttpServer())

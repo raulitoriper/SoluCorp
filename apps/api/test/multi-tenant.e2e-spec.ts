@@ -4,7 +4,11 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/common/prisma/prisma.service';
 import { truncateAll } from './helpers/db';
-import { createTestCompany, createTestUser, signTokenFor } from './helpers/auth';
+import {
+  createTestCompany,
+  createTestUser,
+  signTokenFor,
+} from './helpers/auth';
 
 describe('Multi-tenant isolation (e2e) — transversal', () => {
   let app: INestApplication;
@@ -101,7 +105,12 @@ describe('Multi-tenant isolation (e2e) — transversal', () => {
         })
         .expect(400);
 
-      expect(res.body.message.some((m: string) => m.includes('companyId') && m.includes('should not exist'))).toBe(true);
+      expect(
+        res.body.message.some(
+          (m: string) =>
+            m.includes('companyId') && m.includes('should not exist'),
+        ),
+      ).toBe(true);
     });
   });
 
@@ -121,7 +130,9 @@ describe('Multi-tenant isolation (e2e) — transversal', () => {
         .expect(200);
 
       expect(resA.body.length).toBeGreaterThan(0);
-      expect(resA.body.every((v: any) => v.companyId === companyIdA)).toBe(true);
+      expect(resA.body.every((v: any) => v.companyId === companyIdA)).toBe(
+        true,
+      );
     });
 
     it('GET /api/visits con JWT de empresa-B retorna array vacío si empresa-B no tiene visitas', async () => {
@@ -160,7 +171,9 @@ describe('Multi-tenant isolation (e2e) — transversal', () => {
         .expect(200);
 
       expect(Array.isArray(resB.body)).toBe(true);
-      expect(resB.body.every((r: any) => r.companyId === companyIdB)).toBe(true);
+      expect(resB.body.every((r: any) => r.companyId === companyIdB)).toBe(
+        true,
+      );
     });
   });
 });

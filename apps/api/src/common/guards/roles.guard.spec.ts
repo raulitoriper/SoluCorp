@@ -11,10 +11,7 @@ describe('RolesGuard', () => {
     reflector = { getAllAndOverride: jest.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        RolesGuard,
-        { provide: Reflector, useValue: reflector },
-      ],
+      providers: [RolesGuard, { provide: Reflector, useValue: reflector }],
     }).compile();
 
     guard = module.get<RolesGuard>(RolesGuard);
@@ -67,7 +64,10 @@ describe('RolesGuard', () => {
   });
 
   it('usuario FIELD_WORKER accediendo a ruta con múltiples roles [COMPANY_ADMIN, SUPER_ADMIN] → retorna false', () => {
-    reflector.getAllAndOverride.mockReturnValue(['COMPANY_ADMIN', 'SUPER_ADMIN']);
+    reflector.getAllAndOverride.mockReturnValue([
+      'COMPANY_ADMIN',
+      'SUPER_ADMIN',
+    ]);
     const ctx = buildContext('FIELD_WORKER');
 
     const result = guard.canActivate(ctx);
@@ -81,6 +81,9 @@ describe('RolesGuard', () => {
 
     guard.canActivate(ctx);
 
-    expect(reflector.getAllAndOverride).toHaveBeenCalledWith(ROLES_KEY, expect.any(Array));
+    expect(reflector.getAllAndOverride).toHaveBeenCalledWith(
+      ROLES_KEY,
+      expect.any(Array),
+    );
   });
 });

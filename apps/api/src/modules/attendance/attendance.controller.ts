@@ -1,7 +1,18 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
+import {
+  CurrentUser,
+  JwtPayload,
+} from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 
@@ -17,7 +28,12 @@ export class AttendanceController {
   }
 
   @Get()
-  findAll(@CurrentUser() user: JwtPayload, @Query('employeeCode') employeeCode?: string, @Query('from') from?: string, @Query('to') to?: string) {
+  findAll(
+    @CurrentUser() user: JwtPayload,
+    @Query('employeeCode') employeeCode?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
     return this.svc.findAll(user.companyId!, { employeeCode, from, to });
   }
 

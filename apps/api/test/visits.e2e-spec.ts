@@ -4,7 +4,11 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/common/prisma/prisma.service';
 import { truncateAll } from './helpers/db';
-import { createTestCompany, createTestUser, signTokenFor } from './helpers/auth';
+import {
+  createTestCompany,
+  createTestUser,
+  signTokenFor,
+} from './helpers/auth';
 
 describe('Visits (e2e)', () => {
   let app: INestApplication;
@@ -89,10 +93,19 @@ describe('Visits (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post('/api/visits')
         .set('Authorization', `Bearer ${token}`)
-        .send({ clientCode: 'CLI001', eventType: 'START', companyId: 'tenant-malicious' })
+        .send({
+          clientCode: 'CLI001',
+          eventType: 'START',
+          companyId: 'tenant-malicious',
+        })
         .expect(400);
 
-      expect(res.body.message.some((m: string) => m.includes('companyId') && m.includes('should not exist'))).toBe(true);
+      expect(
+        res.body.message.some(
+          (m: string) =>
+            m.includes('companyId') && m.includes('should not exist'),
+        ),
+      ).toBe(true);
     });
 
     it('válido → 201 con companyId del JWT, no del body', async () => {

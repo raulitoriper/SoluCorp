@@ -7,14 +7,20 @@ export class GpsService {
   constructor(private prisma: PrismaService) {}
 
   async createBatch(companyId: string, userId: string, points: GpsPointDto[]) {
-    if (!points?.length) throw new BadRequestException('Se requiere al menos un punto GPS');
-    if (points.length > 50) throw new BadRequestException('Máximo 50 puntos por batch');
+    if (!points?.length)
+      throw new BadRequestException('Se requiere al menos un punto GPS');
+    if (points.length > 50)
+      throw new BadRequestException('Máximo 50 puntos por batch');
 
     const data = points.map((p) => ({
-      companyId, userId,
-      latitude: p.latitude, longitude: p.longitude,
-      accuracy: p.accuracy, altitude: p.altitude,
-      speed: p.speed, heading: p.heading,
+      companyId,
+      userId,
+      latitude: p.latitude,
+      longitude: p.longitude,
+      accuracy: p.accuracy,
+      altitude: p.altitude,
+      speed: p.speed,
+      heading: p.heading,
       batteryLevel: p.batteryLevel,
       recordedAt: new Date(p.recordedAt),
     }));
@@ -26,7 +32,8 @@ export class GpsService {
   findByUser(companyId: string, userId: string, from: string, to: string) {
     return this.prisma.gpsLocation.findMany({
       where: {
-        companyId, userId,
+        companyId,
+        userId,
         recordedAt: { gte: new Date(from), lt: new Date(to) },
       },
       orderBy: { recordedAt: 'asc' },

@@ -1,6 +1,19 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { CompaniesService } from './companies.service';
-import { CreateCompanyDto, UpdateCompanyDto, UpdateSubscriptionDto } from './dto/create-company.dto';
+import {
+  CreateCompanyDto,
+  UpdateCompanyDto,
+  UpdateSubscriptionDto,
+} from './dto/create-company.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard, Roles } from '../../common/guards/roles.guard';
 
@@ -31,12 +44,19 @@ export class CompaniesController {
   }
 
   @Patch(':id/subscription')
-  updateSubscription(@Param('id') id: string, @Body() dto: UpdateSubscriptionDto) {
+  updateSubscription(
+    @Param('id') id: string,
+    @Body() dto: UpdateSubscriptionDto,
+  ) {
     return this.companiesService.updateSubscription(id, dto);
   }
 
   @Post(':id/modules/:module')
-  toggleModule(@Param('id') id: string, @Param('module') module: string, @Body('isEnabled') isEnabled: boolean) {
+  toggleModule(
+    @Param('id') id: string,
+    @Param('module') module: string,
+    @Body('isEnabled') isEnabled: boolean,
+  ) {
     return this.companiesService.toggleModule(id, module, isEnabled);
   }
 }

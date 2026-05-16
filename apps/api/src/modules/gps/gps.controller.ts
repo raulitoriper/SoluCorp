@@ -1,7 +1,10 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { GpsService } from './gps.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
+import {
+  CurrentUser,
+  JwtPayload,
+} from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
 import { CreateGpsBatchDto } from './dto/create-gps-batch.dto';
 
@@ -17,7 +20,12 @@ export class GpsController {
   }
 
   @Get()
-  findByUser(@CurrentUser() user: JwtPayload, @Query('userId') userId: string, @Query('from') from: string, @Query('to') to: string) {
+  findByUser(
+    @CurrentUser() user: JwtPayload,
+    @Query('userId') userId: string,
+    @Query('from') from: string,
+    @Query('to') to: string,
+  ) {
     return this.svc.findByUser(user.companyId!, userId, from, to);
   }
 

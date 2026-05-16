@@ -23,8 +23,13 @@ export class InventoryService {
 
   findAll(companyId: string, filters?: any) {
     return this.prisma.inventoryRecord.findMany({
-      where: { companyId, ...(filters?.depositCode && { depositCode: filters.depositCode }), ...(filters?.productCode && { productCode: filters.productCode }) },
-      orderBy: { markedAt: 'desc' }, take: 100,
+      where: {
+        companyId,
+        ...(filters?.depositCode && { depositCode: filters.depositCode }),
+        ...(filters?.productCode && { productCode: filters.productCode }),
+      },
+      orderBy: { markedAt: 'desc' },
+      take: 100,
     });
   }
 

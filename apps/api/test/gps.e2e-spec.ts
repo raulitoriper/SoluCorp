@@ -4,7 +4,11 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/common/prisma/prisma.service';
 import { truncateAll } from './helpers/db';
-import { createTestCompany, createTestUser, signTokenFor } from './helpers/auth';
+import {
+  createTestCompany,
+  createTestUser,
+  signTokenFor,
+} from './helpers/auth';
 
 describe('GPS (e2e)', () => {
   let app: INestApplication;
@@ -57,7 +61,9 @@ describe('GPS (e2e)', () => {
         .post('/api/gps/batch')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          points: [{ longitude: -57.5, recordedAt: '2026-05-16T10:00:00.000Z' }],
+          points: [
+            { longitude: -57.5, recordedAt: '2026-05-16T10:00:00.000Z' },
+          ],
         })
         .expect(400);
 
@@ -83,7 +89,13 @@ describe('GPS (e2e)', () => {
         .post('/api/gps/batch')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          points: [{ latitude: 100, longitude: -57.5, recordedAt: '2026-05-16T10:00:00.000Z' }],
+          points: [
+            {
+              latitude: 100,
+              longitude: -57.5,
+              recordedAt: '2026-05-16T10:00:00.000Z',
+            },
+          ],
         })
         .expect(400);
 
@@ -95,7 +107,13 @@ describe('GPS (e2e)', () => {
         .post('/api/gps/batch')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          points: [{ latitude: -25.3, longitude: -200, recordedAt: '2026-05-16T10:00:00.000Z' }],
+          points: [
+            {
+              latitude: -25.3,
+              longitude: -200,
+              recordedAt: '2026-05-16T10:00:00.000Z',
+            },
+          ],
         })
         .expect(400);
 
@@ -107,7 +125,9 @@ describe('GPS (e2e)', () => {
         .post('/api/gps/batch')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          points: [{ latitude: -25.3, longitude: -57.5, recordedAt: 'not-a-date' }],
+          points: [
+            { latitude: -25.3, longitude: -57.5, recordedAt: 'not-a-date' },
+          ],
         })
         .expect(400);
 
@@ -119,12 +139,14 @@ describe('GPS (e2e)', () => {
         .post('/api/gps/batch')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          points: [{
-            latitude: -25.3,
-            longitude: -57.5,
-            recordedAt: '2026-05-16T10:00:00.000Z',
-            extraField: 'no_permitido',
-          }],
+          points: [
+            {
+              latitude: -25.3,
+              longitude: -57.5,
+              recordedAt: '2026-05-16T10:00:00.000Z',
+              extraField: 'no_permitido',
+            },
+          ],
         })
         .expect(400);
 
@@ -136,11 +158,13 @@ describe('GPS (e2e)', () => {
         .post('/api/gps/batch')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          points: [{
-            latitude: -25.3,
-            longitude: -57.5,
-            recordedAt: '2026-05-16T10:00:00.000Z',
-          }],
+          points: [
+            {
+              latitude: -25.3,
+              longitude: -57.5,
+              recordedAt: '2026-05-16T10:00:00.000Z',
+            },
+          ],
         })
         .expect(201);
 
@@ -171,7 +195,13 @@ describe('GPS (e2e)', () => {
         .post('/api/gps/batch')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          points: [{ latitude: -25.3, longitude: -57.5, recordedAt: '2026-05-16T10:00:00.000Z' }],
+          points: [
+            {
+              latitude: -25.3,
+              longitude: -57.5,
+              recordedAt: '2026-05-16T10:00:00.000Z',
+            },
+          ],
         })
         .expect(201);
 

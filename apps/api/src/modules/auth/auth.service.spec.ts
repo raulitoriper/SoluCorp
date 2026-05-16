@@ -19,7 +19,11 @@ describe('AuthService', () => {
   let service: AuthService;
   let prisma: {
     user: { findUnique: jest.Mock; update: jest.Mock };
-    refreshToken: { create: jest.Mock; findUnique: jest.Mock; update: jest.Mock };
+    refreshToken: {
+      create: jest.Mock;
+      findUnique: jest.Mock;
+      update: jest.Mock;
+    };
   };
   let jwtService: { sign: jest.Mock };
 
@@ -77,12 +81,18 @@ describe('AuthService', () => {
   describe('login', () => {
     it('con credenciales válidas → retorna access_token y refresh_token con companyId en payload', async () => {
       prisma.user.findUnique.mockResolvedValue(mockUser);
-      prisma.refreshToken.create.mockResolvedValue({ id: 'rt-1', token: 'refresh-tok' });
+      prisma.refreshToken.create.mockResolvedValue({
+        id: 'rt-1',
+        token: 'refresh-tok',
+      });
       prisma.user.update.mockResolvedValue({});
 
       bcrypt.compare.mockResolvedValue(true);
 
-      const result = await service.login({ email: 'test@empresa.com', password: 'Password123!' });
+      const result = await service.login({
+        email: 'test@empresa.com',
+        password: 'Password123!',
+      });
 
       expect(result).toHaveProperty('access_token');
       expect(result).toHaveProperty('refresh_token');
@@ -104,7 +114,10 @@ describe('AuthService', () => {
     });
 
     it('con usuario inactivo → lanza UnauthorizedException', async () => {
-      prisma.user.findUnique.mockResolvedValue({ ...mockUser, isActive: false });
+      prisma.user.findUnique.mockResolvedValue({
+        ...mockUser,
+        isActive: false,
+      });
 
       await expect(
         service.login({ email: 'test@empresa.com', password: 'Password123!' }),
@@ -160,7 +173,9 @@ describe('AuthService', () => {
         revokedAt: new Date(),
       });
 
-      await expect(service.refresh('revoked-token')).rejects.toThrow(UnauthorizedException);
+      await expect(service.refresh('revoked-token')).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('con token expirado → lanza UnauthorizedException', async () => {
@@ -169,13 +184,17 @@ describe('AuthService', () => {
         expiresAt: new Date(Date.now() - 86400000), // ayer
       });
 
-      await expect(service.refresh('expired-token')).rejects.toThrow(UnauthorizedException);
+      await expect(service.refresh('expired-token')).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('con token inexistente → lanza UnauthorizedException', async () => {
       prisma.refreshToken.findUnique.mockResolvedValue(null);
 
-      await expect(service.refresh('nonexistent-token')).rejects.toThrow(UnauthorizedException);
+      await expect(service.refresh('nonexistent-token')).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });

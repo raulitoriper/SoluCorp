@@ -4,7 +4,11 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/common/prisma/prisma.service';
 import { truncateAll } from './helpers/db';
-import { createTestCompany, createTestUser, signTokenFor } from './helpers/auth';
+import {
+  createTestCompany,
+  createTestUser,
+  signTokenFor,
+} from './helpers/auth';
 
 describe('Sync (e2e)', () => {
   let app: INestApplication;
@@ -70,7 +74,13 @@ describe('Sync (e2e)', () => {
         .post('/api/sync/batch')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          items: [{ entityType: 'visit', idempotencyKey: '', payload: { clientCode: 'CLI001' } }],
+          items: [
+            {
+              entityType: 'visit',
+              idempotencyKey: '',
+              payload: { clientCode: 'CLI001' },
+            },
+          ],
         })
         .expect(400);
 
@@ -82,11 +92,13 @@ describe('Sync (e2e)', () => {
         .post('/api/sync/batch')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          items: [{
-            entityType: 'visit',
-            idempotencyKey: 'idem-key-001',
-            payload: { clientCode: 'CLI001', eventType: 'START' },
-          }],
+          items: [
+            {
+              entityType: 'visit',
+              idempotencyKey: 'idem-key-001',
+              payload: { clientCode: 'CLI001', eventType: 'START' },
+            },
+          ],
         })
         .expect(201);
 
@@ -97,11 +109,13 @@ describe('Sync (e2e)', () => {
 
     it('con idempotencyKey duplicado → 201 con estado ALREADY_SYNCED', async () => {
       const payload = {
-        items: [{
-          entityType: 'visit',
-          idempotencyKey: 'idem-key-duplicate',
-          payload: { clientCode: 'CLI001' },
-        }],
+        items: [
+          {
+            entityType: 'visit',
+            idempotencyKey: 'idem-key-duplicate',
+            payload: { clientCode: 'CLI001' },
+          },
+        ],
       };
 
       // Primera vez
@@ -126,11 +140,16 @@ describe('Sync (e2e)', () => {
         .post('/api/sync/batch')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          items: [{
-            entityType: 'custom_entity',
-            idempotencyKey: 'idem-key-free',
-            payload: { nested: { data: [1, 2, 3], flag: true }, freeField: 'value' },
-          }],
+          items: [
+            {
+              entityType: 'custom_entity',
+              idempotencyKey: 'idem-key-free',
+              payload: {
+                nested: { data: [1, 2, 3], flag: true },
+                freeField: 'value',
+              },
+            },
+          ],
         })
         .expect(201);
 
@@ -142,11 +161,13 @@ describe('Sync (e2e)', () => {
         .post('/api/sync/batch')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          items: [{
-            entityType: 'visit',
-            idempotencyKey: 'idem-key-string',
-            payload: 'esto-no-es-objeto',
-          }],
+          items: [
+            {
+              entityType: 'visit',
+              idempotencyKey: 'idem-key-string',
+              payload: 'esto-no-es-objeto',
+            },
+          ],
         })
         .expect(400);
 

@@ -11,11 +11,16 @@ export async function createTestCompany(
   const company = await prisma.company.create({
     data: {
       name: overrides.name ?? 'Test Co',
-      ruc: overrides.ruc ?? `RUC-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      ruc:
+        overrides.ruc ??
+        `RUC-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       subscription: { create: { status: 'ACTIVE', planType: 'STANDARD' } },
       settings: { create: {} },
       modules: {
-        create: Object.values(ServiceModule).map((m) => ({ module: m, isEnabled: true })),
+        create: Object.values(ServiceModule).map((m) => ({
+          module: m,
+          isEnabled: true,
+        })),
       },
     },
   });
@@ -30,9 +35,18 @@ export async function createTestUser(
 ) {
   const password = overrides.password ?? 'Password123!';
   const passwordHash = await bcrypt.hash(password, 4); // rounds bajos para tests rápidos
-  const email = overrides.email ?? `user-${Date.now()}-${Math.random().toString(36).slice(2, 6)}@test.local`;
+  const email =
+    overrides.email ??
+    `user-${Date.now()}-${Math.random().toString(36).slice(2, 6)}@test.local`;
   const user = await prisma.user.create({
-    data: { companyId, email, passwordHash, firstName: 'Test', lastName: 'User', role },
+    data: {
+      companyId,
+      email,
+      passwordHash,
+      firstName: 'Test',
+      lastName: 'User',
+      role,
+    },
   });
   return { userId: user.id, email, password };
 }
@@ -48,16 +62,28 @@ export function signTokenFor(
 ): string {
   const jwt = app.get(JwtService);
   return jwt.sign(
-    { sub: user.userId, email: user.email, role: user.role, companyId: user.companyId },
+    {
+      sub: user.userId,
+      email: user.email,
+      role: user.role,
+      companyId: user.companyId,
+    },
     { expiresIn: '8h' },
   );
 }
 
-export async function loginViaHttp(app: INestApplication, email: string, password: string) {
+export async function loginViaHttp(
+  app: INestApplication,
+  email: string,
+  password: string,
+) {
   const request = (await import('supertest')).default;
   const res = await request(app.getHttpServer())
     .post('/api/auth/login')
     .send({ email, password })
     .expect(200);
-  return { accessToken: res.body.access_token, refreshToken: res.body.refresh_token };
+  return {
+    accessToken: res.body.access_token,
+    refreshToken: res.body.refresh_token,
+  };
 }

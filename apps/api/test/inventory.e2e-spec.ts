@@ -4,7 +4,11 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/common/prisma/prisma.service';
 import { truncateAll } from './helpers/db';
-import { createTestCompany, createTestUser, signTokenFor } from './helpers/auth';
+import {
+  createTestCompany,
+  createTestUser,
+  signTokenFor,
+} from './helpers/auth';
 
 describe('Inventory (e2e)', () => {
   let app: INestApplication;
@@ -88,10 +92,20 @@ describe('Inventory (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post('/api/inventory')
         .set('Authorization', `Bearer ${token}`)
-        .send({ depositCode: 'D01', productCode: 'P01', quantity: 5, companyId: 'otro-tenant' })
+        .send({
+          depositCode: 'D01',
+          productCode: 'P01',
+          quantity: 5,
+          companyId: 'otro-tenant',
+        })
         .expect(400);
 
-      expect(res.body.message.some((m: string) => m.includes('companyId') && m.includes('should not exist'))).toBe(true);
+      expect(
+        res.body.message.some(
+          (m: string) =>
+            m.includes('companyId') && m.includes('should not exist'),
+        ),
+      ).toBe(true);
     });
 
     it('válido → 201 con companyId del JWT (no del body)', async () => {
@@ -112,7 +126,12 @@ describe('Inventory (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post('/api/inventory')
         .set('Authorization', `Bearer ${token}`)
-        .send({ depositCode: 'D01', productCode: 'P01', quantity: 5, latitude: 91 })
+        .send({
+          depositCode: 'D01',
+          productCode: 'P01',
+          quantity: 5,
+          latitude: 91,
+        })
         .expect(400);
 
       expect(res.body.statusCode).toBe(400);

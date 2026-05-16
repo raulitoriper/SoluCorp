@@ -22,10 +22,7 @@ describe('SyncService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        SyncService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [SyncService, { provide: PrismaService, useValue: prisma }],
     }).compile();
 
     service = module.get<SyncService>(SyncService);
@@ -40,7 +37,10 @@ describe('SyncService', () => {
   describe('processBatch', () => {
     it('item nuevo (idempotencyKey no existe) → procesa y crea record con status SYNCED', async () => {
       prisma.syncQueueItem.findUnique.mockResolvedValue(null); // no existe
-      prisma.syncQueueItem.create.mockResolvedValue({ id: 'sq-1', idempotencyKey: 'key-001' });
+      prisma.syncQueueItem.create.mockResolvedValue({
+        id: 'sq-1',
+        idempotencyKey: 'key-001',
+      });
 
       const result = await service.processBatch('cmp-1', 'usr-1', [validItem]);
 
@@ -53,7 +53,11 @@ describe('SyncService', () => {
     });
 
     it('item duplicado (idempotencyKey ya existe) → retorna ALREADY_SYNCED sin crear nuevo', async () => {
-      const existingRecord = { id: 'sq-existing', idempotencyKey: 'key-001', resultId: 'res-1' };
+      const existingRecord = {
+        id: 'sq-existing',
+        idempotencyKey: 'key-001',
+        resultId: 'res-1',
+      };
       prisma.syncQueueItem.findUnique.mockResolvedValue(existingRecord);
 
       const result = await service.processBatch('cmp-1', 'usr-1', [validItem]);
@@ -68,22 +72,38 @@ describe('SyncService', () => {
 
     it('batch parcial (3 items, 1 falla) → retorna resultado por item con estados mezclados', async () => {
       const items = [
-        { entityType: 'visit', idempotencyKey: 'key-A', payload: { clientCode: 'CLI-A' } },
-        { entityType: 'visit', idempotencyKey: 'key-B', payload: { clientCode: 'CLI-B' } },
-        { entityType: 'visit', idempotencyKey: 'key-C', payload: { clientCode: 'CLI-C' } },
+        {
+          entityType: 'visit',
+          idempotencyKey: 'key-A',
+          payload: { clientCode: 'CLI-A' },
+        },
+        {
+          entityType: 'visit',
+          idempotencyKey: 'key-B',
+          payload: { clientCode: 'CLI-B' },
+        },
+        {
+          entityType: 'visit',
+          idempotencyKey: 'key-C',
+          payload: { clientCode: 'CLI-C' },
+        },
       ];
 
       // key-A: nuevo → OK
       // key-B: duplicado → ALREADY_SYNCED
       // key-C: nuevo pero create falla → FAILED
       prisma.syncQueueItem.findUnique
-        .mockResolvedValueOnce(null)       // key-A: no existe
-        .mockResolvedValueOnce({ id: 'sq-b', idempotencyKey: 'key-B', resultId: null }) // key-B: existe
-        .mockResolvedValueOnce(null);      // key-C: no existe
+        .mockResolvedValueOnce(null) // key-A: no existe
+        .mockResolvedValueOnce({
+          id: 'sq-b',
+          idempotencyKey: 'key-B',
+          resultId: null,
+        }) // key-B: existe
+        .mockResolvedValueOnce(null); // key-C: no existe
 
       prisma.syncQueueItem.create
         .mockResolvedValueOnce({ id: 'sq-a', idempotencyKey: 'key-A' }) // key-A: OK
-        .mockRejectedValueOnce(new Error('DB constraint violation'));    // key-C: falla
+        .mockRejectedValueOnce(new Error('DB constraint violation')); // key-C: falla
 
       const result = await service.processBatch('cmp-1', 'usr-1', items);
 

@@ -8,14 +8,20 @@ export class CourierService {
 
   create(companyId: string, userId: string, dto: CreateCourierDto) {
     const items = dto.items.map((item, i) => ({
-      lineNumber: i + 1, barcode: item.barcode,
+      lineNumber: i + 1,
+      barcode: item.barcode,
     }));
 
     return this.prisma.courierDelivery.create({
       data: {
-        companyId, userId, status: dto.status, receiverName: dto.receiverName,
-        motiveCode: dto.motiveCode, observation: dto.observation,
-        latitude: dto.latitude, longitude: dto.longitude,
+        companyId,
+        userId,
+        status: dto.status,
+        receiverName: dto.receiverName,
+        motiveCode: dto.motiveCode,
+        observation: dto.observation,
+        latitude: dto.latitude,
+        longitude: dto.longitude,
         items: { create: items },
       },
       include: { items: true },
@@ -24,13 +30,21 @@ export class CourierService {
 
   findAll(companyId: string, filters?: any) {
     return this.prisma.courierDelivery.findMany({
-      where: { companyId, ...(filters?.status && { status: filters.status }), ...(filters?.userId && { userId: filters.userId }) },
+      where: {
+        companyId,
+        ...(filters?.status && { status: filters.status }),
+        ...(filters?.userId && { userId: filters.userId }),
+      },
       include: { items: true },
-      orderBy: { markedAt: 'desc' }, take: 100,
+      orderBy: { markedAt: 'desc' },
+      take: 100,
     });
   }
 
   findOne(companyId: string, id: string) {
-    return this.prisma.courierDelivery.findFirst({ where: { id, companyId }, include: { items: true } });
+    return this.prisma.courierDelivery.findFirst({
+      where: { id, companyId },
+      include: { items: true },
+    });
   }
 }

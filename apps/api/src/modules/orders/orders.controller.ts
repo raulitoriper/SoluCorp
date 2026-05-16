@@ -1,7 +1,19 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
+import {
+  CurrentUser,
+  JwtPayload,
+} from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
 import { CreateOrderDto, UpdateOrderStatusDto } from './dto/create-order.dto';
 
@@ -17,7 +29,12 @@ export class OrdersController {
   }
 
   @Get()
-  findAll(@CurrentUser() user: JwtPayload, @Query('userId') userId?: string, @Query('clientCode') clientCode?: string, @Query('status') status?: string) {
+  findAll(
+    @CurrentUser() user: JwtPayload,
+    @Query('userId') userId?: string,
+    @Query('clientCode') clientCode?: string,
+    @Query('status') status?: string,
+  ) {
     return this.svc.findAll(user.companyId!, { userId, clientCode, status });
   }
 
@@ -27,7 +44,11 @@ export class OrdersController {
   }
 
   @Patch(':id/status')
-  updateStatus(@Param('id') id: string, @Body() dto: UpdateOrderStatusDto, @CurrentUser() user: JwtPayload) {
+  updateStatus(
+    @Param('id') id: string,
+    @Body() dto: UpdateOrderStatusDto,
+    @CurrentUser() user: JwtPayload,
+  ) {
     return this.svc.updateStatus(user.companyId!, id, dto.status);
   }
 }

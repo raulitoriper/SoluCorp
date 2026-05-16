@@ -1,7 +1,18 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { GuardShiftService } from './guard.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
+import {
+  CurrentUser,
+  JwtPayload,
+} from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
 import { CreateGuardShiftDto } from './dto/create-guard-shift.dto';
 
@@ -17,7 +28,12 @@ export class GuardShiftController {
   }
 
   @Get()
-  findAll(@CurrentUser() user: JwtPayload, @Query('guardCode') guardCode?: string, @Query('from') from?: string, @Query('to') to?: string) {
+  findAll(
+    @CurrentUser() user: JwtPayload,
+    @Query('guardCode') guardCode?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
     return this.svc.findAll(user.companyId!, { guardCode, from, to });
   }
 

@@ -1,7 +1,18 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { MedicalVisitsService } from './medical-visits.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
+import {
+  CurrentUser,
+  JwtPayload,
+} from '../../common/decorators/current-user.decorator';
 import { ModuleGuard, RequireModule } from '../../common/guards/module.guard';
 import { CreateMedicalVisitDto } from './dto/create-medical-visit.dto';
 
@@ -17,7 +28,11 @@ export class MedicalVisitsController {
   }
 
   @Get()
-  findAll(@CurrentUser() user: JwtPayload, @Query('clinicCode') clinicCode?: string, @Query('medicCode') medicCode?: string) {
+  findAll(
+    @CurrentUser() user: JwtPayload,
+    @Query('clinicCode') clinicCode?: string,
+    @Query('medicCode') medicCode?: string,
+  ) {
     return this.svc.findAll(user.companyId!, { clinicCode, medicCode });
   }
 

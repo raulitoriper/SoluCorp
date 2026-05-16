@@ -32,10 +32,7 @@ describe('VisitsService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        VisitsService,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [VisitsService, { provide: PrismaService, useValue: prisma }],
     }).compile();
 
     service = module.get<VisitsService>(VisitsService);
@@ -48,7 +45,7 @@ describe('VisitsService', () => {
       await service.create('cmp-real', 'usr-1', {
         clientCode: 'CLI-001',
         eventType: 'ARRIVAL' as any,
-      } as any);
+      });
 
       const callArg = prisma.visit.create.mock.calls[0][0].data;
       expect(callArg.companyId).toBe('cmp-real');
@@ -80,7 +77,7 @@ describe('VisitsService', () => {
         observation: 'obs de test',
         latitude: -25.3,
         longitude: -57.5,
-      } as any);
+      });
 
       const callArg = prisma.visit.create.mock.calls[0][0].data;
       expect(callArg).toMatchObject({
@@ -105,14 +102,23 @@ describe('VisitsService', () => {
         observation: 'obs',
         latitude: -25.3,
         longitude: -57.5,
-      } as any);
+      });
 
       const callArg = prisma.visit.create.mock.calls[0][0].data;
       const keys = Object.keys(callArg).sort();
 
       // Solo deben existir estas 8 claves exactas — sin extras del dto
       expect(keys).toEqual(
-        ['clientCode', 'companyId', 'eventType', 'latitude', 'longitude', 'motiveCode', 'observation', 'userId'].sort(),
+        [
+          'clientCode',
+          'companyId',
+          'eventType',
+          'latitude',
+          'longitude',
+          'motiveCode',
+          'observation',
+          'userId',
+        ].sort(),
       );
     });
   });
@@ -135,7 +141,10 @@ describe('VisitsService', () => {
       await service.findOne('cmp-1', 'id-visit');
 
       const callArg = prisma.visit.findFirst.mock.calls[0][0];
-      expect(callArg.where).toMatchObject({ id: 'id-visit', companyId: 'cmp-1' });
+      expect(callArg.where).toMatchObject({
+        id: 'id-visit',
+        companyId: 'cmp-1',
+      });
     });
   });
 });

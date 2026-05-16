@@ -39,7 +39,7 @@ describe('AttendanceService', () => {
         employeeCode: 'EMP001',
         eventCategory: 'REGULAR' as any,
         eventAction: 'CHECK_IN' as any,
-      } as any);
+      });
 
       const callArg = prisma.attendanceEvent.create.mock.calls[0][0].data;
       expect(callArg.companyId).toBe('cmp-real');
@@ -70,7 +70,7 @@ describe('AttendanceService', () => {
         observation: 'salida normal',
         latitude: -25.3,
         longitude: -57.5,
-      } as any);
+      });
 
       const callArg = prisma.attendanceEvent.create.mock.calls[0][0].data;
       expect(callArg).toMatchObject({

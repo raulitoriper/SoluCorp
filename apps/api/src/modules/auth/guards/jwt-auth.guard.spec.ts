@@ -46,7 +46,7 @@ describe('JwtAuthGuard', () => {
       let result: boolean | undefined;
       let threw = false;
       try {
-        result = await Promise.resolve(guard.canActivate(ctx)) as boolean;
+        result = (await Promise.resolve(guard.canActivate(ctx))) as boolean;
       } catch {
         threw = true;
       }
@@ -61,7 +61,7 @@ describe('JwtAuthGuard', () => {
       let result: boolean | undefined;
       let threw = false;
       try {
-        result = await Promise.resolve(guard.canActivate(ctx)) as boolean;
+        result = (await Promise.resolve(guard.canActivate(ctx))) as boolean;
       } catch {
         threw = true;
       }

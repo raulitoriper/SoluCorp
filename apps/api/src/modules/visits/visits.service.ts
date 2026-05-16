@@ -21,13 +21,26 @@ export class VisitsService {
     });
   }
 
-  findAll(companyId: string, filters?: { userId?: string; clientCode?: string; from?: string; to?: string }) {
+  findAll(
+    companyId: string,
+    filters?: {
+      userId?: string;
+      clientCode?: string;
+      from?: string;
+      to?: string;
+    },
+  ) {
     return this.prisma.visit.findMany({
       where: {
         companyId,
         ...(filters?.userId && { userId: filters.userId }),
         ...(filters?.clientCode && { clientCode: filters.clientCode }),
-        ...(filters?.from && { markedAt: { gte: new Date(filters.from), ...(filters?.to && { lt: new Date(filters.to) }) } }),
+        ...(filters?.from && {
+          markedAt: {
+            gte: new Date(filters.from),
+            ...(filters?.to && { lt: new Date(filters.to) }),
+          },
+        }),
       },
       orderBy: { markedAt: 'desc' },
       take: 100,

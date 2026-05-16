@@ -37,7 +37,7 @@ describe('GuardShiftService', () => {
 
       await service.create('cmp-real', 'usr-1', {
         guardCode: 'GRD001',
-      } as any);
+      });
 
       const callArg = prisma.guardShift.create.mock.calls[0][0].data;
       expect(callArg.companyId).toBe('cmp-real');
@@ -66,7 +66,7 @@ describe('GuardShiftService', () => {
         observation: 'turno normal',
         latitude: -25.3,
         longitude: -57.5,
-      } as any);
+      });
 
       const callArg = prisma.guardShift.create.mock.calls[0][0].data;
       expect(callArg).toMatchObject({
@@ -79,7 +79,12 @@ describe('GuardShiftService', () => {
       });
 
       expect(Object.keys(callArg)).toEqual(
-        expect.arrayContaining(['companyId', 'userId', 'guardCode', 'eventType']),
+        expect.arrayContaining([
+          'companyId',
+          'userId',
+          'guardCode',
+          'eventType',
+        ]),
       );
     });
 
@@ -89,7 +94,7 @@ describe('GuardShiftService', () => {
       await service.create('cmp-1', 'usr-1', {
         guardCode: 'GRD001',
         // eventType no provisto
-      } as any);
+      });
 
       const callArg = prisma.guardShift.create.mock.calls[0][0].data;
       // El service asigna dto.eventType que es undefined — DB puede aplicar default
@@ -115,7 +120,10 @@ describe('GuardShiftService', () => {
       await service.findOne('cmp-1', 'id-shift');
 
       const callArg = prisma.guardShift.findFirst.mock.calls[0][0];
-      expect(callArg.where).toMatchObject({ id: 'id-shift', companyId: 'cmp-1' });
+      expect(callArg.where).toMatchObject({
+        id: 'id-shift',
+        companyId: 'cmp-1',
+      });
     });
   });
 });

@@ -4,7 +4,11 @@ import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/common/prisma/prisma.service';
 import { truncateAll } from './helpers/db';
-import { createTestCompany, createTestUser, signTokenFor } from './helpers/auth';
+import {
+  createTestCompany,
+  createTestUser,
+  signTokenFor,
+} from './helpers/auth';
 
 describe('ValidationPipe (e2e) — transversal', () => {
   let app: INestApplication;
@@ -62,7 +66,12 @@ describe('ValidationPipe (e2e) — transversal', () => {
 
       expect(res.body.statusCode).toBe(400);
       expect(Array.isArray(res.body.message)).toBe(true);
-      expect(res.body.message.some((m: string) => m.includes('appVersion') && m.includes('should not exist'))).toBe(true);
+      expect(
+        res.body.message.some(
+          (m: string) =>
+            m.includes('appVersion') && m.includes('should not exist'),
+        ),
+      ).toBe(true);
       expect(res.body.error).toBe('Bad Request');
     });
 
@@ -80,7 +89,12 @@ describe('ValidationPipe (e2e) — transversal', () => {
 
       expect(res.body.statusCode).toBe(400);
       expect(Array.isArray(res.body.message)).toBe(true);
-      expect(res.body.message.some((m: string) => m.includes('companyId') && m.includes('should not exist'))).toBe(true);
+      expect(
+        res.body.message.some(
+          (m: string) =>
+            m.includes('companyId') && m.includes('should not exist'),
+        ),
+      ).toBe(true);
     });
 
     it('POST /api/inventory con quantity como string no numérico → 400', async () => {
@@ -98,7 +112,13 @@ describe('ValidationPipe (e2e) — transversal', () => {
       expect(Array.isArray(res.body.message)).toBe(true);
       // Con enableImplicitConversion: false, 'abc' no es coercible a número
       const msgs: string[] = res.body.message;
-      expect(msgs.some((m) => m.toLowerCase().includes('quantity') || m.toLowerCase().includes('number'))).toBe(true);
+      expect(
+        msgs.some(
+          (m) =>
+            m.toLowerCase().includes('quantity') ||
+            m.toLowerCase().includes('number'),
+        ),
+      ).toBe(true);
     });
 
     it('POST /api/orders sin items → 400 (@ArrayMinSize)', async () => {
@@ -121,7 +141,12 @@ describe('ValidationPipe (e2e) — transversal', () => {
       const res = await request(app.getHttpServer())
         .post('/api/inventory')
         .set('Authorization', `Bearer ${token}`)
-        .send({ depositCode: 'D01', productCode: 'P01', quantity: 5, unknownField: 'x' })
+        .send({
+          depositCode: 'D01',
+          productCode: 'P01',
+          quantity: 5,
+          unknownField: 'x',
+        })
         .expect(400);
 
       expect(res.body).toMatchObject({
