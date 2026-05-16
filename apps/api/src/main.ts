@@ -22,4 +22,4 @@ async function bootstrap() {
   await app.listen(port, '0.0.0.0');
   console.log(`SoluCorp API corriendo en http://0.0.0.0:${port}/api`);
 }
-bootstrap();
+void bootstrap();

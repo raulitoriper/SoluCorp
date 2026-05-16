@@ -1,7 +1,7 @@
 import { ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ModuleGuard, REQUIRED_MODULE_KEY } from './module.guard';
+import { ModuleGuard } from './module.guard';
 import { PrismaService } from '../prisma/prisma.service';
 
 describe('ModuleGuard', () => {
@@ -28,7 +28,10 @@ describe('ModuleGuard', () => {
     guard = module.get<ModuleGuard>(ModuleGuard);
   });
 
-  function buildContext(user: { companyId: string | null; role?: string }): ExecutionContext {
+  function buildContext(user: {
+    companyId: string | null;
+    role?: string;
+  }): ExecutionContext {
     return {
       getHandler: () => ({}),
       getClass: () => ({}),
@@ -58,7 +61,9 @@ describe('ModuleGuard', () => {
     expect(result).toBe(true);
     expect(prisma.companyModule.findUnique).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { companyId_module: { companyId: 'cmp-1', module: 'INVENTORY' } },
+        where: {
+          companyId_module: { companyId: 'cmp-1', module: 'INVENTORY' },
+        },
       }),
     );
   });
