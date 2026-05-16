@@ -1,0 +1,28 @@
+change: ci-pipeline
+project: SoluCorp
+artifact_store: openspec
+
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/ci-pipeline/exploration.md
+  propose:
+    status: done
+    artifact: openspec/changes/ci-pipeline/proposal.md
+  design:
+    status: done
+    artifact: openspec/changes/ci-pipeline/design.md
+  spec:
+    status: done
+    artifact: openspec/changes/ci-pipeline/spec.md
+  tasks:
+    status: pending
+  apply:
+    status: pending
+  verify:
+    status: pending
+  archive:
+    status: pending
+
+next_recommended: sdd-tasks
+last_updated: "2026-05-16"
