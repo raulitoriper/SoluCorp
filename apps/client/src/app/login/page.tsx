@@ -27,6 +27,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800">SoluCorp</h1>
           <p className="text-gray-500 mt-2">Portal de Empresa</p>
+          <p className="text-gray-400 text-xs mt-1">Solo para administradores de empresa (COMPANY_ADMIN)</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-5">
           {error && <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">{error}</div>}

@@ -13,7 +13,13 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (ready && !user) router.push('/login');
     if (ready && user && user.role !== 'SUPER_ADMIN') {
-      alert('Acceso denegado. Solo administradores de SoluCorp.');
+      const target =
+        user.role === 'COMPANY_ADMIN'
+          ? 'el portal de empresa'
+          : 'la app móvil';
+      alert(
+        `Este portal es solo para administradores de SoluCorp (SUPER_ADMIN). Tu rol "${user.role}" debe acceder desde ${target}.`,
+      );
       localStorage.clear();
       router.push('/login');
     }
