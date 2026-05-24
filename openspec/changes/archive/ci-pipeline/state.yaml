@@ -1,0 +1,35 @@
+change: ci-pipeline
+project: SoluCorp
+artifact_store: openspec
+
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/archive/ci-pipeline/exploration.md
+  propose:
+    status: done
+    artifact: openspec/changes/archive/ci-pipeline/proposal.md
+  design:
+    status: done
+    artifact: openspec/changes/archive/ci-pipeline/design.md
+  spec:
+    status: done
+    artifact: openspec/changes/archive/ci-pipeline/spec.md
+  tasks:
+    status: done
+    artifact: openspec/changes/archive/ci-pipeline/tasks.md
+  apply:
+    status: done
+    artifact: openspec/changes/archive/ci-pipeline/apply-progress.md
+  verify:
+    status: done
+    artifact: openspec/changes/archive/ci-pipeline/verify-report.md
+  archive:
+    status: done
+    artifact: openspec/changes/archive/ci-pipeline/archive-report.md
+
+next_recommended: none
+last_updated: "2026-05-24"
+archived: true
+archived_on: "2026-05-24"
+spec_master_created: "openspec/specs/ci-infrastructure/spec.md"
