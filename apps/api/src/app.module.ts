@@ -14,6 +14,7 @@ import { GuardModule } from './modules/guard/guard.module';
 import { MedicalVisitsModule } from './modules/medical-visits/medical-visits.module';
 import { CourierModule } from './modules/courier/courier.module';
 import { SyncModule } from './modules/sync/sync.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -33,6 +34,8 @@ import { SyncModule } from './modules/sync/sync.module';
     MedicalVisitsModule,
     CourierModule,
     SyncModule,
+    // Módulos transversales (SUPER_ADMIN)
+    AdminModule,
   ],
 })
 export class AppModule {}

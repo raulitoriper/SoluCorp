@@ -58,7 +58,7 @@ export async function createTestUser(
  */
 export function signTokenFor(
   app: INestApplication,
-  user: { userId: string; email: string; role: UserRole; companyId: string },
+  user: { userId: string; email: string; role: UserRole; companyId: string | null },
 ): string {
   const jwt = app.get(JwtService);
   return jwt.sign(
@@ -70,6 +70,32 @@ export function signTokenFor(
     },
     { expiresIn: '8h' },
   );
+}
+
+/**
+ * Crea un usuario SUPER_ADMIN con companyId: null (no pertenece a tenant).
+ * Reutilizable para tests de endpoints admin transversales.
+ */
+export async function createSuperAdmin(
+  prisma: PrismaService,
+  overrides: Partial<{ email: string; password: string }> = {},
+) {
+  const password = overrides.password ?? 'SuperAdmin123!';
+  const passwordHash = await bcrypt.hash(password, 4);
+  const email =
+    overrides.email ??
+    `superadmin-${Date.now()}-${Math.random().toString(36).slice(2, 6)}@test.local`;
+  const user = await prisma.user.create({
+    data: {
+      companyId: null,
+      email,
+      passwordHash,
+      firstName: 'Super',
+      lastName: 'Admin',
+      role: 'SUPER_ADMIN',
+    },
+  });
+  return { userId: user.id, email, password };
 }
 
 export async function loginViaHttp(

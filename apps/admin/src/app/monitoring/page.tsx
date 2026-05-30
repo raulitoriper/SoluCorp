@@ -29,11 +29,17 @@ export default function MonitoringPage() {
   }, []);
 
   const loadPositions = async (companyId: string) => {
-    if (!companyId) return;
+    if (!companyId) {
+      setPositions([]);
+      return;
+    }
     setLoading(true);
     try {
-      // Para monitoreo global necesitaríamos un endpoint admin específico
-      // Por ahora mostramos el mapa con las empresas disponibles
+      const r = await api.get('/admin/gps/last-positions', {
+        params: { companyId },
+      });
+      setPositions(r.data);
+    } catch {
       setPositions([]);
     } finally {
       setLoading(false);
