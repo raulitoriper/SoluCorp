@@ -54,3 +54,38 @@ El sistema DEBE recibir arrays de hasta 50 puntos GPS por request.
 - CUANDO envía un punto sin el campo `latitude`
 - ENTONCES el sistema DEBE retornar HTTP 400
 - Y `message` DEBE contener un error referente a `points[0].latitude`
+
+---
+
+## Monitoreo cross-tenant (SUPER_ADMIN)
+
+> Agregado por el cambio `admin-monitoring-endpoint` el 2026-05-30.
+> Permite al rol SUPER_ADMIN consultar últimas posiciones GPS de cualquier empresa.
+
+### Endpoint
+`GET /api/admin/gps/last-positions` con query param opcional `companyId`.
+
+### Autorización
+- DEBE estar protegido por `@UseGuards(JwtAuthGuard, RolesGuard)` + `@Roles('SUPER_ADMIN')`.
+- COMPANY_ADMIN, FIELD_WORKER y cualquier otro rol DEBE recibir HTTP 403.
+- Sin token o token expirado DEBE recibir HTTP 401.
+
+### Escenario: Cross-tenant sin filtro
+- DADO un SUPER_ADMIN autenticado
+- CUANDO ejecuta `GET /api/admin/gps/last-positions` sin parámetros
+- ENTONCES DEBE retornar HTTP 200 con un array de últimas posiciones de TODAS las empresas
+- Y cada elemento DEBE incluir `userId`, `latitude`, `longitude`, `accuracy`, `speed`, `batteryLevel`, `recordedAt`, `userName`
+
+### Escenario: Filtrado por empresa
+- DADO un SUPER_ADMIN y una empresa con ID `X`
+- CUANDO ejecuta `GET /api/admin/gps/last-positions?companyId=X`
+- ENTONCES DEBE retornar SOLO las últimas posiciones de la empresa `X`
+
+### Escenario: Shape de respuesta con userName
+- ENTONCES la respuesta DEBE incluir `userName` con formato `"FirstName LastName"`
+- Si el `user_id` referenciado fue eliminado, `userName` DEBE ser `null` (LEFT JOIN preserva el row)
+
+### Escenario: Aislamiento de roles
+- DADO un COMPANY_ADMIN autenticado con `companyId: Y`
+- CUANDO ejecuta `GET /api/admin/gps/last-positions?companyId=Y` (su propia empresa)
+- ENTONCES DEBE recibir HTTP 403 — el endpoint admin está reservado para SUPER_ADMIN, incluso para datos de la propia empresa del COMPANY_ADMIN
