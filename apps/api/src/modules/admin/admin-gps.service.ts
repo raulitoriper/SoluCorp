@@ -17,9 +17,7 @@ export interface AdminLastPositionRow {
 export class AdminGpsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getLastPositions(
-    companyId?: string,
-  ): Promise<AdminLastPositionRow[]> {
+  async getLastPositions(companyId?: string): Promise<AdminLastPositionRow[]> {
     const whereClause = companyId
       ? Prisma.sql`WHERE gl.company_id = ${companyId}`
       : Prisma.empty;

@@ -58,7 +58,12 @@ export async function createTestUser(
  */
 export function signTokenFor(
   app: INestApplication,
-  user: { userId: string; email: string; role: UserRole; companyId: string | null },
+  user: {
+    userId: string;
+    email: string;
+    role: UserRole;
+    companyId: string | null;
+  },
 ): string {
   const jwt = app.get(JwtService);
   return jwt.sign(
