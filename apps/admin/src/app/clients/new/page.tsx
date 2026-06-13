@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AppLayout from '@/components/layout/AppLayout';
-import api from '@/lib/api';
+import { api } from '@solucorp/shared';
 
 const ALL_MODULES = [
   { key: 'VISITS', label: 'Visitas' }, { key: 'ORDERS', label: 'Pedidos' },

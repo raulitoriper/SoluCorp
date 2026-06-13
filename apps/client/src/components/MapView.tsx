@@ -2,6 +2,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { formatDateTime } from '@solucorp/shared';
 
 // Fix para íconos de Leaflet en Next.js
 const defaultIcon = L.icon({
@@ -50,7 +51,7 @@ export default function MapView({ positions, height = '400px' }: Props) {
               <p>Lng: {pos.longitude.toFixed(6)}</p>
               {pos.speed != null && <p>Velocidad: {pos.speed.toFixed(1)} m/s</p>}
               {pos.batteryLevel != null && <p>Batería: {pos.batteryLevel}%</p>}
-              <p className="text-gray-400 text-xs mt-1">{new Date(pos.recordedAt).toLocaleString('es-PY')}</p>
+              <p className="text-gray-400 text-xs mt-1">{formatDateTime(pos.recordedAt)}</p>
             </div>
           </Popup>
         </Marker>

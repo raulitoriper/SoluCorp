@@ -1,5 +1,6 @@
 'use client';
 import ReportPage from '@/components/ReportPage';
+import { formatDateTime } from '@solucorp/shared';
 
 export default function CourierReportsPage() {
   return (
@@ -12,7 +13,7 @@ export default function CourierReportsPage() {
         ]},
       ]}
       columns={[
-        { key: 'markedAt', label: 'Fecha', render: (v) => new Date(v).toLocaleString('es-PY') },
+        { key: 'markedAt', label: 'Fecha', render: (v) => formatDateTime(v) },
         { key: 'status', label: 'Estado', render: (v) => v === 'DELIVERED' ? 'Entregado' : 'No Entregado' },
         { key: 'receiverName', label: 'Receptor' },
         { key: 'motiveCode', label: 'Motivo' },

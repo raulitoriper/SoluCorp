@@ -1,33 +1,26 @@
 import axios from 'axios';
+import { StorageAdapter, localStorageAdapter } from './storage-adapter';
 
-export function createApiClient(baseURL: string) {
+export function createApiClient(baseURL: string, storage: StorageAdapter = localStorageAdapter) {
   const instance = axios.create({
     baseURL,
     headers: { 'Content-Type': 'application/json' },
     timeout: 15000,
   });
 
-  // Interceptor: agregar JWT + Tenant ID
-  instance.interceptors.request.use((config) => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('access_token');
-      if (token) config.headers.Authorization = `Bearer ${token}`;
-
-      const tenantId = localStorage.getItem('tenant_id');
-      if (tenantId) config.headers['X-Tenant-ID'] = tenantId;
-    }
+  // Interceptor: add JWT token to requests (async to support any StorageAdapter)
+  instance.interceptors.request.use(async (config) => {
+    const token = await storage.getToken();
+    if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   });
 
-  // Interceptor: manejar 401 → redirigir a login
+  // Interceptor: handle 401 → clear auth data and redirect to login
   instance.interceptors.response.use(
     (response) => response,
-    (error) => {
+    async (error) => {
       if (error.response?.status === 401 && typeof window !== 'undefined') {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-        localStorage.removeItem('tenant_id');
+        await storage.clearAuth();
         window.location.href = '/login';
       }
       return Promise.reject(error);
@@ -37,7 +30,7 @@ export function createApiClient(baseURL: string) {
   return instance;
 }
 
-// Instancia por defecto para portales web
+// Default instance for web portals — uses localStorageAdapter by default
 export const api = createApiClient(
   typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL
     ? process.env.NEXT_PUBLIC_API_URL

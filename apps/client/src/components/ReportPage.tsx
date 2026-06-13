@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import AppLayout from './layout/AppLayout';
-import api from '@/lib/api';
+import { api } from '@solucorp/shared';
 import { RiSearchLine, RiDownloadLine } from 'react-icons/ri';
 
 interface Column { key: string; label: string; render?: (val: any, row: any) => React.ReactNode; }

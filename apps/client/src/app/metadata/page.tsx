@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import api from '@/lib/api';
+import { api } from '@solucorp/shared';
 import { RiDatabase2Line, RiAddLine, RiEditLine, RiDeleteBinLine } from 'react-icons/ri';
 
 interface MetaType { id: string; code: string; name: string; _count: { items: number }; }

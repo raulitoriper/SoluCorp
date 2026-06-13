@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AppLayout from '@/components/layout/AppLayout';
-import api from '@/lib/api';
+import { api } from '@solucorp/shared';
 import { RiAddLine, RiSearchLine, RiEyeLine } from 'react-icons/ri';
 
 interface Company {

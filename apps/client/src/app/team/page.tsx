@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import api from '@/lib/api';
+import { api, formatDateTime } from '@solucorp/shared';
 import { RiAddLine, RiEditLine, RiUserLine } from 'react-icons/ri';
 
 interface User { id: string; email: string; firstName: string; lastName: string; phone: string | null; role: string; isActive: boolean; lastLoginAt: string | null; createdAt: string; }
@@ -96,7 +96,7 @@ export default function TeamPage() {
                   <td className="p-3 text-gray-600">{u.email}</td>
                   <td className="p-3 text-gray-600">{u.phone || '-'}</td>
                   <td className="p-3"><span className={`px-2 py-0.5 rounded text-xs font-medium ${u.role === 'COMPANY_ADMIN' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>{u.role === 'COMPANY_ADMIN' ? 'Admin' : 'Campo'}</span></td>
-                  <td className="p-3 text-gray-500 text-xs">{u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleString('es-PY') : 'Nunca'}</td>
+                  <td className="p-3 text-gray-500 text-xs">{u.lastLoginAt ? formatDateTime(u.lastLoginAt) : 'Nunca'}</td>
                   <td className="p-3 text-center"><button onClick={() => toggleActive(u)} className={`px-2 py-0.5 rounded-full text-xs font-medium ${u.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{u.isActive ? 'Activo' : 'Inactivo'}</button></td>
                   <td className="p-3 text-center"><button onClick={() => openEdit(u)} className="text-blue-600 hover:text-blue-800"><RiEditLine size={16} /></button></td>
                 </tr>

@@ -1,5 +1,6 @@
 'use client';
 import ReportPage from '@/components/ReportPage';
+import { formatDateTime } from '@solucorp/shared';
 
 export default function GuardReportsPage() {
   return (
@@ -12,7 +13,7 @@ export default function GuardReportsPage() {
         { key: 'to', label: 'Hasta', type: 'date' },
       ]}
       columns={[
-        { key: 'markedAt', label: 'Fecha/Hora', render: (v) => new Date(v).toLocaleString('es-PY') },
+        { key: 'markedAt', label: 'Fecha/Hora', render: (v) => formatDateTime(v) },
         { key: 'guardCode', label: 'Guardia' },
         { key: 'eventType', label: 'Tipo', render: (v) => ({ SHIFT_START: 'Inicio Turno', SHIFT_END: 'Fin Turno', MARK: 'Ronda' }[v as string] || v) },
         { key: 'place', label: 'Lugar' },

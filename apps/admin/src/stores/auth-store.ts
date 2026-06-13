@@ -1,20 +1,11 @@
 'use client';
 import { create } from 'zustand';
-import api from '@/lib/api';
-
-interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  companyId: string | null;
-  companyName: string | null;
-}
+import { api, UserInfo, LoginResponse } from '@solucorp/shared';
 
 interface AuthState {
-  user: User | null;
+  user: UserInfo | null;
   token: string | null;
+  enabledModules: string[];
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -24,16 +15,22 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   token: null,
+  enabledModules: [],
   isLoading: false,
 
   login: async (email, password) => {
     set({ isLoading: true });
     try {
-      const { data } = await api.post('/auth/login', { email, password });
+      const { data } = await api.post<LoginResponse>('/auth/login', { email, password });
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem('refresh_token', data.refresh_token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      set({ user: data.user, token: data.access_token, isLoading: false });
+      set({
+        user: data.user,
+        token: data.access_token,
+        enabledModules: data.enabledModules ?? [],
+        isLoading: false,
+      });
     } catch {
       set({ isLoading: false });
       throw new Error('Credenciales inválidas');
@@ -42,7 +39,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: () => {
     localStorage.clear();
-    set({ user: null, token: null });
+    set({ user: null, token: null, enabledModules: [] });
     window.location.href = '/login';
   },
 

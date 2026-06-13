@@ -1,5 +1,6 @@
 'use client';
 import ReportPage from '@/components/ReportPage';
+import { formatDateTime, formatGuarani } from '@solucorp/shared';
 
 export default function OrderReportsPage() {
   return (
@@ -15,10 +16,10 @@ export default function OrderReportsPage() {
         ]},
       ]}
       columns={[
-        { key: 'markedAt', label: 'Fecha', render: (v) => new Date(v).toLocaleString('es-PY') },
+        { key: 'markedAt', label: 'Fecha', render: (v) => formatDateTime(v) },
         { key: 'clientCode', label: 'Cliente' },
         { key: 'status', label: 'Estado' },
-        { key: 'totalAmountGs', label: 'Total (₲)', render: (v) => `₲ ${(v || 0).toLocaleString('es-PY')}` },
+        { key: 'totalAmountGs', label: 'Total (₲)', render: (v) => formatGuarani(v || 0) },
         { key: 'items', label: 'Items', render: (v) => Array.isArray(v) ? v.length : 0 },
         { key: 'observation', label: 'Observación' },
       ]}
