@@ -59,6 +59,7 @@ apps/api/test/
 
 - **packages/shared:** jest.config.ts, rootDir: src, testRegex `\.spec\.ts$`
 - **packages/ui:** jest.config.ts, rootDir: src, testEnvironment: jsdom, jest.setup.ts para `@testing-library/jest-dom`
+- **apps/client:** jest.config.ts, rootDir: src, testEnvironment: jsdom, testRegex `\.spec\.tsx?$`, moduleNameMapper para `@/*` (alias), CSS mocks, react-icons proxy mock
 
 ---
 
@@ -237,6 +238,105 @@ data: {
 
 Verificable: `rg "\.\.\.dto" src/modules/*/` debe retornar cero matches en métodos create.
 
+### 5.4 Targets de testing obligatorios para apps/client
+
+**Requisito permanente:** `apps/client` DEBE tener los siguientes 4 archivos de test pasando:
+
+#### Escenario: auth-store — login exitoso
+
+- DADO que `useAuthStore` está en estado inicial (sin usuario)
+- CUANDO se llama `login` con credenciales válidas (mock del cliente API retorna token + user)
+- ENTONCES `state.user` DEBE contener el usuario retornado
+- Y `state.token` DEBE contener el access token
+- Y el store DEBE persistir el token vía localStorage
+
+#### Escenario: auth-store — login fallido
+
+- DADO que `useAuthStore` está en estado inicial
+- CUANDO se llama `login` y el cliente API lanza un error (ej. 401)
+- ENTONCES `state.user` DEBE permanecer `null`
+- Y `state.token` DEBE permanecer `null`
+
+#### Escenario: auth-store — logout
+
+- DADO que el store tiene un usuario y token activos
+- CUANDO se llama `logout`
+- ENTONCES `state.user` DEBE ser `null`
+- Y `state.token` DEBE ser `null`
+- Y los datos de auth DEBEN eliminarse del storage persistente
+
+#### Escenario: auth-store — rehidratación desde storage
+
+- DADO que localStorage contiene un token persistido de una sesión anterior
+- CUANDO el store se inicializa (loadFromStorage o equivalente)
+- ENTONCES `state.token` DEBE recuperar el valor almacenado
+
+#### Escenario: AuthGuard — usuario no autenticado es redirigido
+
+- DADO que no hay usuario en el auth store
+- CUANDO `AuthGuard` renderiza
+- ENTONCES DEBE redirigir a `/login`
+
+#### Escenario: AuthGuard — usuario con rol incorrecto es redirigido
+
+- DADO que el usuario autenticado NO tiene el rol requerido por la ruta
+- CUANDO `AuthGuard` evalúa el acceso
+- ENTONCES DEBE redirigir a una ruta de acceso denegado (o login)
+- Y los children NO DEBEN renderizarse
+
+#### Escenario: AuthGuard — usuario con rol autorizado accede
+
+- DADO que el usuario autenticado tiene el rol requerido por la ruta
+- CUANDO `AuthGuard` renderiza la ruta protegida
+- ENTONCES los children DEBEN renderizarse
+- Y NO DEBE producirse redirección
+
+#### Escenario: ReportPage — renderiza columnas de la tabla
+
+- DADO que el componente `ReportPage` recibe datos de reporte válidos (mock)
+- CUANDO se renderiza
+- ENTONCES las columnas definidas DEBEN estar presentes en el DOM
+- Y los datos DEBEN aparecer en las filas correspondientes
+
+#### Escenario: ReportPage — estado de carga
+
+- DADO que la carga de datos aún no completó (mock en estado pending)
+- CUANDO se renderiza `ReportPage`
+- ENTONCES DEBE mostrar un indicador de carga
+- Y la tabla de datos NO DEBE estar visible
+
+#### Escenario: ReportPage — estado vacío
+
+- DADO que la carga completó pero retornó cero registros
+- CUANDO se renderiza `ReportPage`
+- ENTONCES DEBE mostrar un mensaje de estado vacío
+- Y la tabla NO DEBE renderizar filas de datos
+
+#### Escenario: ReportPage — exportar CSV
+
+- DADO que `ReportPage` tiene datos cargados y un botón/acción de exportar CSV
+- CUANDO el usuario activa la exportación
+- ENTONCES la función de exportación DEBE ser invocada con los datos del reporte
+
+#### Escenario: login page — submit con credenciales válidas
+
+- DADO que el formulario de login tiene email y contraseña completos
+- CUANDO el usuario envía el formulario
+- ENTONCES la acción de login del store DEBE ser llamada con los valores ingresados
+
+#### Escenario: login page — muestra error de autenticación
+
+- DADO que el store retorna un error tras un intento de login fallido
+- CUANDO la respuesta de error se refleja en el estado
+- ENTONCES el mensaje de error DEBE ser visible en el formulario
+
+#### Escenario: login page — botón deshabilitado mientras carga
+
+- DADO que el login está en progreso (estado `isLoading: true`)
+- CUANDO el formulario está en pantalla
+- ENTONCES el botón de submit DEBE estar deshabilitado
+- Y NO DEBE ser posible enviar el formulario nuevamente
+
 ---
 
 ## 6. Refactor W01 (visits.service)
@@ -280,6 +380,7 @@ Verificable: `rg "\.\.\.dto" src/modules/*/` debe retornar cero matches en méto
 - **Sin `coverageThreshold` que rompa build** — aspiracional en esta fase
 - **Métricas de referencia por workspace:**
   - apps/api: ≥ 40% aspiracional (actual: 25.99%)
+  - apps/client: sin threshold inicial (baseline: 0%; se establecerán thresholds en cambio futuro)
   - packages/shared: ≥ 70% en utils/format.ts (actual: 100%)
   - packages/ui: 100% en componentes (actual: 100%)
 
@@ -371,6 +472,26 @@ rootDir: 'src',
 setupFilesAfterEach: ['<rootDir>/../jest.setup.ts']
 ```
 
+### 9.5 apps/client (jest.config.ts)
+
+```typescript
+preset: 'ts-jest',
+testEnvironment: 'jsdom',
+rootDir: 'src',
+testRegex: '\\.spec\\.tsx?$',
+setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+moduleNameMapper: {
+  '^@/(.*)$': '<rootDir>/src/$1',
+  '\\.(css|less|scss)$': '<rootDir>/__mocks__/styleMock.js',
+  '^react-icons/.*$': '<rootDir>/__mocks__/reactIconsMock.js',
+  '^react$': '<rootDir>/node_modules/react',
+  '^react-dom$': '<rootDir>/node_modules/react-dom',
+},
+testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
+```
+
+**Notas sobre react pinning (lines 18–19):** El monorepo tiene react@19.1.0 en root y react@19.2.4 en apps/client. Sin el pin explícito, dos instancias de React coexisten en la cadena de módulos causando "Invalid hook call". El `moduleNameMapper` resuelve ambas a la instancia local de apps/client.
+
 ---
 
 ## 10. Helpers de DB y auth (apps/api/test)
@@ -456,12 +577,14 @@ Base de datos DEBE contener literal `"test"`:
 
 ## 14. Próximos cambios sugeridos
 
-1. **mobile-testing-foundation** — Jest + jest-expo + mocks de NetInfo
-2. **admin-testing-foundation** — Jest + testing-library/react + jsdom
-3. **client-testing-foundation** — ídem admin
-4. **ci-pipeline** — GitHub Actions con service container postgres, lcov a Codecov
+1. **admin-testing-foundation** (twin slice) — Jest + testing-library/react + jsdom, idéntica config a `frontend-testing-foundation` (apps/admin)
+2. **mobile-testing-foundation** — Jest + jest-expo + mocks de NetInfo
+3. **ui-in-web-portals** — Refactor de componentes de UI compartida; más seguro con tests en apps/client + apps/admin
+4. **shared-in-mobile** — Adopción de `packages/shared` en mobile; requiere mobile-testing-foundation primero
 5. **services-explicit-fields-cleanup** — refactor de users/users.service y companies/companies.service
 6. **coverage-controllers** — unit specs de controllers si se quiere subir coverage a 40%+
+
+**Estado:** `frontend-testing-foundation` completado 2026-06-13 (apps/client Jest + RTL + 4 test files, 16 tests PASS, CI gate operativo).
 
 ---
 
