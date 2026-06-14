@@ -10,17 +10,17 @@ context: |
 strict_tdd: false
 
 testing:
-  test_runner: NO ENCONTRADO (proyecto nuevo)
+  test_runner: "Jest 30 (apps/api) — raíz: npm test → turbo run test"
   capas:
-    unitarias: NO INSTALADAS
-    integración: NO INSTALADAS
-    e2e: NO INSTALADAS
-  cobertura: NO DISPONIBLE
+    unitarias: "✅ Jest (apps/api)"
+    integración: "✅ Jest + supertest (apps/api)"
+    e2e: "✅ API e2e: test:e2e (jest-e2e.json + supertest) · ❌ E2E browser (Playwright/Cypress) no instalado para portales Next"
+  cobertura: "✅ jest --coverage (apps/api: test:cov)"
   calidad:
-    linter: NO INSTALADO
-    type_checker: NO INSTALADO
-    formatter: NO INSTALADO
-  nota: "La infraestructura de testing se agregará en la Fase 1 (fundación del monorepo)"
+    linter: "✅ eslint 9 (api, admin, client)"
+    type_checker: "✅ tsc --noEmit (api, admin, client; typescript en mobile)"
+    formatter: "✅ prettier 3 (apps/api)"
+  nota: "Detectado 2026-06-08. Mobile (Expo) aún sin runner de tests. strict_tdd sigue en false por config, pero el proyecto YA puede activarlo."
 
 stack_planificado:
   backend: NestJS + Prisma + PostgreSQL

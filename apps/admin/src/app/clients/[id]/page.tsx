@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import AppLayout from '@/components/layout/AppLayout';
-import api from '@/lib/api';
+import { api } from '@solucorp/shared';
 import { RiArrowLeftLine, RiEditLine, RiCheckLine } from 'react-icons/ri';
 
 const ALL_MODULES = [

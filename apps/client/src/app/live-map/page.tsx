@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import api from '@/lib/api';
+import { api } from '@solucorp/shared';
 import { RiRefreshLine, RiMapPinLine } from 'react-icons/ri';
 import dynamic from 'next/dynamic';
 

@@ -1,5 +1,6 @@
 'use client';
 import ReportPage from '@/components/ReportPage';
+import { formatDateTime } from '@solucorp/shared';
 
 export default function VisitReportsPage() {
   return (
@@ -12,7 +13,7 @@ export default function VisitReportsPage() {
         { key: 'to', label: 'Hasta', type: 'date' },
       ]}
       columns={[
-        { key: 'markedAt', label: 'Fecha/Hora', render: (v) => new Date(v).toLocaleString('es-PY') },
+        { key: 'markedAt', label: 'Fecha/Hora', render: (v) => formatDateTime(v) },
         { key: 'clientCode', label: 'Cliente' },
         { key: 'eventType', label: 'Tipo', render: (v) => ({ START: 'Inicio', END: 'Fin', QUICK: 'Rápida' }[v as string] || v) },
         { key: 'motiveCode', label: 'Motivo' },

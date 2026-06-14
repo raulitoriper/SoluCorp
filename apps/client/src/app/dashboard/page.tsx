@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import api from '@/lib/api';
+import { api, formatDateTime } from '@solucorp/shared';
 import { RiWalkLine, RiShoppingCartLine, RiTimeLine, RiMapPinLine, RiTruckLine, RiArchiveLine } from 'react-icons/ri';
 
 export default function DashboardPage() {
@@ -73,7 +73,7 @@ export default function DashboardPage() {
                   <tr key={v.id} className="border-b">
                     <td className="p-3 font-medium text-gray-800">{v.clientCode}</td>
                     <td className="p-3"><span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs">{v.eventType}</span></td>
-                    <td className="p-3 text-gray-600">{new Date(v.markedAt).toLocaleString('es-PY')}</td>
+                    <td className="p-3 text-gray-600">{formatDateTime(v.markedAt)}</td>
                   </tr>
                 ))}
               </tbody>
