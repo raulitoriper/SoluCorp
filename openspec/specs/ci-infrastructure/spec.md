@@ -157,6 +157,43 @@ Cada uno de los 5 jobs DEBE incluir, en orden:
 
 - DADO el job `unit-tests`
 - ENTONCES DEBE existir step que ejecute `npx turbo run test -- --coverage`
+- El alcance DEBE incluir todos los workspaces que declaren script `"test"`: `apps/api`, `packages/shared`, `packages/ui`, y `apps/client`
+- NO DEBEN existir steps adicionales ni jobs separados para aislar la ejecución de `apps/client`
+- El gate bloqueante se obtiene automáticamente: si un workspace declara `"test"`, `turbo run test` lo incluye
+
+#### Escenario: Ejecución de turbo run test incluye los 4 workspaces
+
+- DADO el workflow con el job `unit-tests`
+- Y que `apps/api`, `packages/shared`, `packages/ui` y `apps/client` declaran script `"test"`
+- CUANDO se ejecuta `npx turbo run test -- --coverage`
+- ENTONCES los 4 workspaces DEBEN ejecutarse
+- Y el resultado DEBE ser exit 0 si todos los tests pasan
+
+#### Escenario: Test fallido en apps/client bloquea merge
+
+- DADO que `apps/client` tiene el script `"test"` declarado en su `package.json`
+- Y que al menos un test de `apps/client` falla
+- CUANDO el job `unit-tests` ejecuta `npx turbo run test -- --coverage`
+- ENTONCES `turbo run test` DEBE retornar exit distinto de 0
+- Y el job `unit-tests` DEBE fallar
+- Y el merge DEBE quedar bloqueado por el status check requerido
+
+#### Escenario: Todos los tests de apps/client pasan — job verde
+
+- DADO que `apps/client` tiene el script `"test"` declarado
+- Y que los 4 tests obligatorios pasan
+- CUANDO el job `unit-tests` ejecuta `npx turbo run test -- --coverage`
+- ENTONCES el comando DEBE incluir y ejecutar los tests de `apps/client`
+- Y el job DEBE terminar verde (exit 0)
+- Y el merge NO DEBE quedar bloqueado por unit-tests
+
+#### Escenario: Sin script "test" en apps/client — workspace ignorado por turbo
+
+- DADO que `apps/client` NO tiene el script `"test"` declarado
+- CUANDO `turbo run test` se ejecuta
+- ENTONCES `turbo` DEBE omitir `apps/client` silenciosamente
+- Y los demás workspaces DEBEN ejecutarse con normalidad
+- (Este escenario documenta el estado PRE-cambio; el cambio lo resuelve declarando el script)
 
 ### 6.2 Coverage upload
 
@@ -351,10 +388,12 @@ Los siguientes contratos son preexistentes (de `testing-infrastructure/spec.md`)
 
 ## 14. Cambios futuros relacionados
 
-Estos cambios son independientes y no afectan este spec:
+**Completados:**
+- `frontend-testing-foundation` (2026-06-13) — Jest + RTL en apps/client, gate bloqueante automático vía turbo
 
+**Independientes — no afectan este spec:**
+- `admin-testing-foundation` (twin slice) — Jest + RTL en apps/admin, idéntica config a `frontend-testing-foundation`
 - `mobile-testing-foundation` — Agregar mobile al pipeline (Jest + jest-expo)
 - `typescript-strict-mode` — Revertir ESLint softening (W1 de ci-pipeline)
 - `codecov-integration` — Migrar coverage de Artifact a Codecov
 - `husky-precommit` — Pre-commit hooks como complemento
-- `admin-testing-foundation`, `client-testing-foundation` — Jest + RTL para Next.js apps
